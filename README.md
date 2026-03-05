@@ -1,40 +1,146 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# ElimThrone Church Platform
 
-## Getting Started
+A modern, production-grade church website and CMS platform built with Next.js, TypeScript, Tailwind CSS, and Supabase.
 
-First, run the development server:
+## 🚀 Features
+
+### Core Features
+
+- **Responsive Design** - Mobile-first, fully responsive
+- **Sermon Library** - Video and audio sermon management
+- **Events Calendar** - Create, manage, and register for events
+- **Donation System** - Secure payments via Stripe and Paystack
+- **Blog & News** - Content management for announcements and devotionals
+- **Contact Forms** - Easy communication with church staff
+- **Ministry Directory** - Showcase church ministries and leaders
+
+### Admin Features
+
+- **Role-Based Access Control** - Admin, Editor, Contributor roles
+- **Media Management** - Cloudinary integration for images and videos
+- **Content Management** - Easy drag-and-drop interface
+- **Analytics** - Track engagement and donations
+- **Email Notifications** - Automated email communications
+
+### Technical Features
+
+- **Authentication** - Supabase Auth with Google OAuth
+- **Database** - PostgreSQL via Supabase
+- **Real-time** - Real-time data updates
+- **Security** - SSL, secure payment processing
+- **Performance** - Optimized, fast-loading pages
+- **SEO** - Built-in SEO optimization
+
+## 🛠️ Tech Stack
+
+- **Frontend**: Next.js 14+ (Pages Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+- **Database**: Supabase (PostgreSQL)
+- **Authentication**: Supabase Auth
+- **Payments**: Stripe + Paystack
+- **Media**: Cloudinary
+- **Email**: Resend / SendGrid
+- **Notifications**: React Hot Toast
+- **State Management**: Zustand (optional)
+- **Animations**: Framer Motion (optional)
+- **Deployment**: Vercel
+
+## 📋 Prerequisites
+
+- Node.js 18+ and npm
+- Supabase account and project
+- Stripe account (for payments)
+- Paystack account (for mobile money)
+- Cloudinary account (for media)
+- Resend or SendGrid account (for emails)
+
+## 🔧 Installation & Setup
+
+### 1. Clone and Install Dependencies
+
+```bash
+cd elimthronerm-site
+npm install
+```
+
+### 2. Environment Variables
+
+Create a `.env.local` file in the root directory with the following variables:
+
+```env
+# Supabase
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+
+# Stripe
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+STRIPE_SECRET_KEY=your_stripe_secret_key
+STRIPE_WEBHOOK_SECRET=your_webhook_secret
+
+# Paystack
+NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY=your_paystack_public_key
+PAYSTACK_SECRET_KEY=your_paystack_secret_key
+
+# Cloudinary
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+# Email
+RESEND_API_KEY=your_resend_api_key
+SENDGRID_API_KEY=your_sendgrid_api_key
+
+# App
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+DATABASE_URL=your_database_url
+```
+
+### 3. Database Setup
+
+The platform requires several tables in Supabase. Create them using the SQL below or use the Supabase dashboard.
+
+### 4. Start Development Server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Visit `http://localhost:3000` in your browser.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+## 📁 Project Structure
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+```
+src/
+├── components/          # Reusable UI components
+├── pages/              # Next.js pages and API routes
+│   ├── api/           # API endpoints
+│   ├── auth/          # Authentication pages
+│   └── ...            # Page routes
+├── lib/               # Utility functions and integrations
+├── context/           # React context for state management
+├── hooks/             # Custom React hooks
+├── types/             # TypeScript type definitions
+├── styles/            # Global styles
+└── utils/             # Utility functions
+```
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+## 🔐 Security & Deployment
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- Use strong environment variables
+- Enable Supabase RLS policies
+- Deploy to Vercel for optimal performance
+- Regular security audits
+- Implement rate limiting
 
-## Learn More
+## 📞 Support & Documentation
 
-To learn more about Next.js, take a look at the following resources:
+For detailed setup, API documentation, and deployment instructions, see the full documentation in the project root.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+**Project**: ElimThrone Church Platform  
+**Built with**: Next.js, TypeScript, Tailwind CSS, Supabase  
+**Last Updated**: March 5, 2024
