@@ -37,7 +37,12 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-600 to-blue-800 flex items-center justify-center px-4">
+    <div className="relative min-h-screen text-white flex items-center justify-center px-4 overflow-hidden">
+      {/* Gradient Background with Transparency */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-600 to-blue-900 opacity-90"></div>
+      
+      {/* Content */}
+      <div className="relative">
       <Card className="w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
@@ -122,6 +127,7 @@ export default function LoginPage() {
           </Link>
         </p>
       </Card>
+      </div>
     </div>
   );
 }

@@ -46,8 +46,12 @@ export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative text-white py-12 overflow-hidden">
+        {/* Gradient Background with Transparency */}
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-400 via-purple-600 to-purple-900 opacity-90"></div>
+        
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-4 text-gray-600">About Elimcity Throneroom</h1>
           <p className="text-xl text-purple-100">
             Our story, vision, and commitment to serving our community

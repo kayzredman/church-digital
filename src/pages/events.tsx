@@ -20,8 +20,12 @@ export default function EventsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-green-600 to-green-800 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative text-white py-12 overflow-hidden">
+        {/* Gradient Background with Transparency */}
+        <div className="absolute inset-0 bg-gradient-to-br from-green-400 via-green-600 to-green-900 opacity-90"></div>
+        
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-4">Church Events</h1>
           <p className="text-xl text-green-100">
             Join us for upcoming events and fellowship

@@ -32,8 +32,12 @@ export default function GivePage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-red-600 to-red-800 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative text-white py-12 overflow-hidden">
+        {/* Gradient Background with Transparency */}
+        <div className="absolute inset-0 bg-gradient-to-br from-red-400 via-red-600 to-red-900 opacity-90"></div>
+        
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-4">Support Our Ministry</h1>
           <p className="text-xl text-red-100">
             Your generous giving helps us serve and impact our community

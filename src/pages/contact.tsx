@@ -53,8 +53,12 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-orange-600 to-orange-800 text-white py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative text-white py-12 overflow-hidden">
+        {/* Gradient Background with Transparency */}
+        <div className="absolute inset-0 bg-gradient-to-br from-orange-400 via-orange-600 to-orange-900 opacity-90"></div>
+        
+        {/* Content */}
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
           <p className="text-xl text-orange-100">
             We'd love to hear from you. Send us a message!
