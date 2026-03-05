@@ -11,8 +11,8 @@ export default function App({ Component, pageProps }: AppProps) {
       <Head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="description" content="ElimThrone Church - A Modern Church Platform" />
-        <title>ElimThrone Church</title>
+        <meta name="description" content="Elimcity Throneroom - A Modern Church Platform" />
+        <title>Elimcity Throneroom</title>
       </Head>
 
       <AuthProvider>

@@ -34,7 +34,10 @@ export default function EventsPage() {
         {/* Calendar View Toggle */}
         <div className="mb-8 flex justify-between items-center">
           <h2 className="text-2xl font-bold">Upcoming Events</h2>
-          <Button variant="secondary">Calendar View</Button>
+          <Button variant="secondary" className="font-bold py-2">
+            <Calendar size={20} className="inline mr-2" />
+            View Calendar View
+          </Button>
         </div>
 
         {/* Events List */}

@@ -129,11 +129,11 @@ export default function SignupPage() {
 
           <Button
             type="submit"
-            className="w-full"
+            className="w-full py-3 text-lg font-bold"
             loading={loading}
             disabled={loading}
           >
-            Create Account
+            {loading ? 'Creating Account...' : 'Create My Account'}
           </Button>
         </form>
 

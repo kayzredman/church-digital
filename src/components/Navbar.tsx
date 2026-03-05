@@ -25,7 +25,7 @@ export function Navbar() {
             <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
               <span className="text-white font-bold text-sm">E</span>
             </div>
-            <span className="font-bold hidden sm:inline text-lg">ElimThrone</span>
+            <span className="font-bold hidden sm:inline text-lg">Elimcity</span>
           </Link>
 
           {/* Desktop Menu */}
@@ -75,7 +75,7 @@ export function Navbar() {
             ) : (
               <Link
                 href="/auth/login"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition"
+                className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition font-semibold"
               >
                 Sign In
               </Link>

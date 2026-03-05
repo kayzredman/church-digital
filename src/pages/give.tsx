@@ -159,12 +159,12 @@ export default function GivePage() {
 
               {/* Submit */}
               <Button
-                className="w-full"
+                className="w-full py-3 text-lg font-bold"
                 onClick={handleDonate}
                 disabled={!amount}
               >
-                <Heart size={20} className="inline mr-2" />
-                Donate ${amount || '0'}
+                <Heart size={22} className="inline mr-3" />
+                {amount ? `Complete Donation of $${amount}` : 'Enter Amount to Donate'}
               </Button>
             </Card>
           </div>

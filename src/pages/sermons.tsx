@@ -79,13 +79,16 @@ export default function SermonsPage() {
                 <Music size={48} className="text-white opacity-50" />
               </div>
               <h3 className="font-bold text-lg mb-1">{sermon.title}</h3>
-              <p className="text-gray-600 text-sm mb-2">{sermon.speaker}</p>
+              <p className="text-gray-600 text-sm mb-2">Speaker: {sermon.speaker}</p>
               <div className="text-gray-500 text-xs mb-4">
-                <p>{sermon.date}</p>
-                <p>{sermon.duration}</p>
-                <p>{sermon.views} views</p>
+                <p className="font-medium">📅 {sermon.date}</p>
+                <p className="font-medium">⏱️ {sermon.duration}</p>
+                <p className="font-medium">👁️ {sermon.views} views</p>
               </div>
-              <Button className="w-full">Listen</Button>
+              <Button className="w-full font-bold">
+                <Music size={18} className="inline mr-2" />
+                Listen to Full Sermon
+              </Button>
             </Card>
           ))}
         </div>

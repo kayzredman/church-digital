@@ -65,11 +65,11 @@ export default function LoginPage() {
 
           <Button
             type="submit"
-            className="w-full"
+            className="w-full py-3 text-lg font-bold"
             loading={loading}
             disabled={loading}
           >
-            Sign In
+            {loading ? 'Signing In...' : 'Sign In to Your Account'}
           </Button>
         </form>
 

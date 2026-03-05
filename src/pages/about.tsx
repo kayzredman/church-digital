@@ -48,7 +48,7 @@ export default function AboutPage() {
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-4">About ElimThrone Church</h1>
+          <h1 className="text-4xl font-bold mb-4">About Elimcity Throneroom</h1>
           <p className="text-xl text-purple-100">
             Our story, vision, and commitment to serving our community
           </p>
@@ -63,7 +63,7 @@ export default function AboutPage() {
             <div>
               <h2 className="text-3xl font-bold mb-4">Our Story</h2>
               <p className="text-gray-700 mb-4 leading-relaxed">
-                ElimThrone Church was founded in 2005 with a vision to create a place where people
+                Elimcity Throneroom was founded in 2005 with a vision to create a place where people
                 could encounter God's love and grow in their faith. What started with a small group
                 of believers has grown into a thriving community of thousands.
               </p>

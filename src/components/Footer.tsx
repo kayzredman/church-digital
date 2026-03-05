@@ -12,7 +12,7 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           {/* About */}
           <div>
-            <h3 className="font-bold text-lg mb-4">ElimThrone Church</h3>
+            <h3 className="font-bold text-lg mb-4">Elimcity Throneroom</h3>
             <p className="text-gray-400 text-sm leading-relaxed">
               A modern church dedicated to spiritual growth, community service, and spreading the word of God.
             </p>
@@ -132,7 +132,7 @@ export function Footer() {
         {/* Divider */}
         <div className="border-t border-gray-800 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center text-sm text-gray-400">
-            <p>&copy; {currentYear} ElimThrone Church. All rights reserved.</p>
+            <p>&copy; {currentYear} Elimcity Throneroom. All rights reserved.</p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link href="/privacy" className="hover:text-white transition">
                 Privacy Policy

@@ -10,25 +10,25 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-5xl md:text-6xl font-bold mb-6">
-              Welcome to ElimThrone Church
+              Welcome to Elimcity Throneroom
             </h1>
             <p className="text-xl md:text-2xl mb-8 text-blue-100">
               A place to grow spiritual, connect with community, and serve others
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-4">
+            <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
               <Link href="/give">
-                <Button className="px-8 py-3 text-lg bg-white text-blue-600 hover:bg-gray-100">
-                  <Heart size={20} className="inline mr-2" />
-                  Give
+                <Button className="px-8 py-4 text-lg bg-white text-blue-600 hover:bg-gray-100 font-bold shadow-lg">
+                  <Heart size={22} className="inline mr-3" />
+                  Support Our Ministry
                 </Button>
               </Link>
               <Link href="/sermons">
                 <Button
                   variant="secondary"
-                  className="px-8 py-3 text-lg border-2 border-white bg-transparent text-white hover:bg-blue-700"
+                  className="px-8 py-4 text-lg border-2 border-white bg-transparent text-white hover:bg-blue-700 font-bold shadow-lg"
                 >
-                  <Music size={20} className="inline mr-2" />
-                  Watch Sermons
+                  <Music size={22} className="inline mr-3" />
+                  Explore Our Sermons
                 </Button>
               </Link>
             </div>

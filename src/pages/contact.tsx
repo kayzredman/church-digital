@@ -187,11 +187,11 @@ export default function ContactPage() {
 
                 <Button
                   type="submit"
-                  className="w-full"
+                  className="w-full py-3 text-lg font-bold"
                   loading={loading}
                   disabled={loading}
                 >
-                  Send Message
+                  {loading ? 'Sending Your Message...' : 'Send Message to Us'}
                 </Button>
               </form>
 

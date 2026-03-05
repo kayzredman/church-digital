@@ -1,4 +1,4 @@
-# ElimThrone Church Platform
+# Elimcity Throneroom Platform
 
 A modern, production-grade church website and CMS platform built with Next.js, TypeScript, Tailwind CSS, and Supabase.
 
@@ -141,6 +141,6 @@ For detailed setup, API documentation, and deployment instructions, see the full
 
 ---
 
-**Project**: ElimThrone Church Platform  
+**Project**: Elimcity Throneroom Platform  
 **Built with**: Next.js, TypeScript, Tailwind CSS, Supabase  
 **Last Updated**: March 5, 2024
