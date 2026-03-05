@@ -47,7 +47,7 @@ export default function GivePage() {
           {/* Giving Form */}
           <div className="md:col-span-2">
             <Card>
-              <h2 className="text-2xl font-bold mb-6">Make a Donation</h2>
+              <h2 className="text-2xl font-bold mb-6 text-gray-600">Make a Donation</h2>
 
               {/* Amount Selection */}
               <div className="mb-6">
@@ -172,28 +172,28 @@ export default function GivePage() {
           {/* Info Cards */}
           <div className="space-y-4">
             <Card className="bg-blue-50 border-blue-200">
-              <h3 className="font-bold text-lg mb-2">100% Transparent</h3>
+              <h3 className="font-bold text-lg mb-2 text-gray-600">100% Transparent</h3>
               <p className="text-sm text-gray-700">
                 Your giving is handled securely and every donation goes directly to our ministry.
               </p>
             </Card>
 
             <Card className="bg-green-50 border-green-200">
-              <h3 className="font-bold text-lg mb-2">Tax Deductible</h3>
+              <h3 className="font-bold text-lg mb-2 text-gray-600">Tax Deductible</h3>
               <p className="text-sm text-gray-700">
                 We are a registered 501(c)(3) nonprofit. Keep your receipt for tax purposes.
               </p>
             </Card>
 
             <Card className="bg-purple-50 border-purple-200">
-              <h3 className="font-bold text-lg mb-2">Secure Payment</h3>
+              <h3 className="font-bold text-lg mb-2 text-gray-600">Secure Payment</h3>
               <p className="text-sm text-gray-700">
                 Your payment information is encrypted and processed securely.
               </p>
             </Card>
 
             <Card className="bg-yellow-50 border-yellow-200">
-              <h3 className="font-bold text-lg mb-2">Recurring Giving</h3>
+              <h3 className="font-bold text-lg mb-2 text-gray-600">Recurring Giving</h3>
               <p className="text-sm text-gray-700">
                 Set up monthly giving to sustain our ministry consistently.
               </p>
@@ -203,28 +203,28 @@ export default function GivePage() {
 
         {/* FAQ Section */}
         <div className="mt-16">
-          <h2 className="text-2xl font-bold mb-8">Frequently Asked Questions</h2>
+          <h2 className="text-2xl font-bold mb-8 text-gray-600">Frequently Asked Questions</h2>
           <div className="grid md:grid-cols-2 gap-6">
             <Card>
-              <h3 className="font-bold text-lg mb-2">Where does my donation go?</h3>
+              <h3 className="font-bold text-lg mb-2 text-gray-600">Where does my donation go?</h3>
               <p className="text-gray-700 text-sm">
                 Your donation supports our community programs, salaries, facility maintenance, and mission work.
               </p>
             </Card>
             <Card>
-              <h3 className="font-bold text-lg mb-2">Is my information secure?</h3>
+              <h3 className="font-bold text-lg mb-2 text-gray-600">Is my information secure?</h3>
               <p className="text-gray-700 text-sm">
                 Yes! We use industry-standard encryption to protect your personal and payment information.
               </p>
             </Card>
             <Card>
-              <h3 className="font-bold text-lg mb-2">Can I give online?</h3>
+              <h3 className="font-bold text-lg mb-2 text-gray-600">Can I give online?</h3>
               <p className="text-gray-700 text-sm">
                 Yes! You can give anytime using our secure online donation form above.
               </p>
             </Card>
             <Card>
-              <h3 className="font-bold text-lg mb-2">Do you offer receipts?</h3>
+              <h3 className="font-bold text-lg mb-2 text-gray-600">Do you offer receipts?</h3>
               <p className="text-gray-700 text-sm">
                 Yes! Receipts are sent to your email for tax deduction purposes.
               </p>

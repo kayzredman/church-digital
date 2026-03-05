@@ -48,7 +48,7 @@ export default function AboutPage() {
       {/* Header */}
       <div className="bg-gradient-to-r from-purple-600 to-purple-800 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-4">About Elimcity Throneroom</h1>
+          <h1 className="text-4xl font-bold mb-4 text-gray-600">About Elimcity Throneroom</h1>
           <p className="text-xl text-purple-100">
             Our story, vision, and commitment to serving our community
           </p>
@@ -61,7 +61,7 @@ export default function AboutPage() {
         <section className="mb-16">
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-4">Our Story</h2>
+              <h2 className="text-3xl font-bold mb-4 text-gray-600">Our Story</h2>
               <p className="text-gray-700 mb-4 leading-relaxed">
                 Elimcity Throneroom was founded in 2005 with a vision to create a place where people
                 could encounter God's love and grow in their faith. What started with a small group
@@ -82,14 +82,14 @@ export default function AboutPage() {
 
         {/* Core Values */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">Our Core Values</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center text-gray-600">Our Core Values</h2>
           <div className="grid md:grid-cols-4 gap-6">
             {values.map((value, idx) => {
               const Icon = value.icon;
               return (
                 <Card key={idx} className="text-center hover:shadow-lg transition">
                   <Icon size={48} className="text-purple-600 mx-auto mb-4" />
-                  <h3 className="font-bold text-lg mb-2">{value.title}</h3>
+                  <h3 className="font-bold text-lg mb-2 text-gray-600">{value.title}</h3>
                   <p className="text-gray-700 text-sm">{value.description}</p>
                 </Card>
               );
@@ -99,12 +99,12 @@ export default function AboutPage() {
 
         {/* Leadership Team */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">Meet Our Leadership</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center text-gray-600">Meet Our Leadership</h2>
           <div className="grid md:grid-cols-3 gap-6">
             {team.map((member, idx) => (
               <Card key={idx} className="text-center">
                 <div className="w-32 h-32 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full mx-auto mb-4"></div>
-                <h3 className="font-bold text-lg">{member.name}</h3>
+                <h3 className="font-bold text-lg text-gray-600">{member.name}</h3>
                 <p className="text-purple-600 font-medium mb-3">{member.role}</p>
                 <p className="text-gray-700 text-sm">{member.bio}</p>
               </Card>
@@ -114,7 +114,7 @@ export default function AboutPage() {
 
         {/* Ministries Overview */}
         <section className="mb-16">
-          <h2 className="text-3xl font-bold mb-8 text-center">Our Ministries</h2>
+          <h2 className="text-3xl font-bold mb-8 text-center text-gray-600">Our Ministries</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {[
               {
@@ -135,7 +135,7 @@ export default function AboutPage() {
               },
             ].map((ministry, idx) => (
               <Card key={idx} className="border-l-4 border-purple-600">
-                <h3 className="font-bold text-lg mb-2">{ministry.title}</h3>
+                <h3 className="font-bold text-lg mb-2 text-gray-600">{ministry.title}</h3>
                 <p className="text-gray-700">{ministry.description}</p>
               </Card>
             ))}
@@ -146,7 +146,7 @@ export default function AboutPage() {
         <section className="bg-white rounded-lg shadow-lg p-8 mb-16">
           <div className="grid md:grid-cols-2 gap-8">
             <div>
-              <h3 className="text-2xl font-bold mb-4 text-purple-600">Our Vision</h3>
+              <h3 className="text-2xl font-bold mb-4 text-gray-600">Our Vision</h3>
               <p className="text-gray-700 leading-relaxed">
                 To be a beacon of hope and a place of transformation where every person encounters
                 God's unconditional love, discovers their purpose, and becomes equipped to impact
@@ -154,7 +154,7 @@ export default function AboutPage() {
               </p>
             </div>
             <div>
-              <h3 className="text-2xl font-bold mb-4 text-purple-600">Our Mission</h3>
+              <h3 className="text-2xl font-bold mb-4 text-gray-600">Our Mission</h3>
               <p className="text-gray-700 leading-relaxed">
                 To reach people with the Gospel, teach them God's Word, help them grow spiritually,
                 and send them out to serve and make disciples who will transform our community and

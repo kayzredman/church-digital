@@ -39,13 +39,13 @@ export default function Home() {
       {/* Service Times */}
       <section className="bg-gray-50 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Service Times</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-gray-600">Service Times</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <Card className="text-center hover:shadow-lg transition">
               <div className="flex justify-center mb-3">
                 <Calendar size={32} className="text-blue-600" />
               </div>
-              <h3 className="text-xl font-bold mb-3">⛪ Sunday Morning</h3>
+              <h3 className="text-xl font-bold mb-3 text-gray-600">⛪ Sunday Morning</h3>
               <p className="text-gray-700 font-semibold mb-1">🕘 9:00 AM - 11:00 AM</p>
               <p className="text-gray-600 mb-4">📍 Main Sanctuary</p>
               <p className="text-sm text-gray-500 italic">Traditional worship with music & teaching</p>
@@ -54,7 +54,7 @@ export default function Home() {
               <div className="flex justify-center mb-3">
                 <Users size={32} className="text-purple-600" />
               </div>
-              <h3 className="text-xl font-bold mb-3">🎉 Sunday Evening</h3>
+              <h3 className="text-xl font-bold mb-3 text-gray-600">🎉 Sunday Evening</h3>
               <p className="text-gray-700 font-semibold mb-1">🕔 5:00 PM - 6:30 PM</p>
               <p className="text-gray-600 mb-4">📍 Fellowship Hall</p>
               <p className="text-sm text-gray-500 italic">Contemporary worship & community fellowship</p>
@@ -63,7 +63,7 @@ export default function Home() {
               <div className="flex justify-center mb-3">
                 <Zap size={32} className="text-yellow-600" />
               </div>
-              <h3 className="text-xl font-bold mb-3">🙏 Wednesday Prayer</h3>
+              <h3 className="text-xl font-bold mb-3 text-gray-600">🙏 Wednesday Prayer</h3>
               <p className="text-gray-700 font-semibold mb-1">🕖 7:00 PM - 8:00 PM</p>
               <p className="text-gray-600 mb-4">📍 Prayer Room</p>
               <p className="text-sm text-gray-500 italic">Midweek prayer & spiritual renewal</p>
@@ -76,7 +76,7 @@ export default function Home() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-3xl font-bold">Latest Sermons</h2>
+            <h2 className="text-3xl font-bold text-gray-600">Latest Sermons</h2>
             <Link href="/sermons">
               <Button variant="ghost" className="font-semibold">View All Sermons →</Button>
             </Link>
@@ -104,7 +104,7 @@ export default function Home() {
       <section className="bg-gray-50 py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center mb-12">
-            <h2 className="text-3xl font-bold">Upcoming Events</h2>
+            <h2 className="text-3xl font-bold text-gray-600">Upcoming Events</h2>
             <Link href="/events">
               <Button variant="ghost" className="font-semibold">View All Events →</Button>
             </Link>
@@ -138,7 +138,7 @@ export default function Home() {
       {/* Call to Action */}
       <section className="bg-blue-600 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl font-bold mb-4">💝 Support Our Ministry</h2>
+          <h2 className="text-3xl font-bold mb-4 text-gray-600">💝 Support Our Ministry</h2>
           <p className="text-xl mb-8 text-blue-100">
             Your generous giving helps us serve and impact our community with the love of Christ
           </p>

@@ -71,7 +71,7 @@ export default function ContactPage() {
               <div className="flex items-start space-x-4">
                 <MapPin size={24} className="text-orange-600 mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-lg mb-1">Address</h3>
+                  <h3 className="font-bold text-lg mb-1 text-gray-600">Address</h3>
                   <p className="text-gray-700 text-sm">
                     123 Church Street
                     <br />
@@ -87,7 +87,7 @@ export default function ContactPage() {
               <div className="flex items-start space-x-4">
                 <Phone size={24} className="text-orange-600 mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-lg mb-1">Phone</h3>
+                  <h3 className="font-bold text-lg mb-1 text-gray-600">Phone</h3>
                   <p className="text-gray-700 text-sm">
                     <a href="tel:+234xxx" className="hover:text-orange-600">
                       +234 XXX XXX XXXX
@@ -101,7 +101,7 @@ export default function ContactPage() {
               <div className="flex items-start space-x-4">
                 <Mail size={24} className="text-orange-600 mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-lg mb-1">Email</h3>
+                  <h3 className="font-bold text-lg mb-1 text-gray-600">Email</h3>
                   <p className="text-gray-700 text-sm">
                     <a
                       href="mailto:info@elimthronerm.com"
@@ -118,7 +118,7 @@ export default function ContactPage() {
               <div className="flex items-start space-x-4">
                 <Clock size={24} className="text-orange-600 mt-1 flex-shrink-0" />
                 <div>
-                  <h3 className="font-bold text-lg mb-1">Service Hours</h3>
+                  <h3 className="font-bold text-lg mb-1 text-gray-600">Service Hours</h3>
                   <p className="text-gray-700 text-sm">
                     Sunday: 9:00 AM - 6:00 PM
                     <br />
@@ -134,7 +134,7 @@ export default function ContactPage() {
           {/* Contact Form */}
           <div className="md:col-span-2">
             <Card>
-              <h2 className="text-2xl font-bold mb-6">Send us a Message</h2>
+              <h2 className="text-2xl font-bold mb-6 text-gray-600">Send us a Message</h2>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid md:grid-cols-2 gap-4">
@@ -204,7 +204,7 @@ export default function ContactPage() {
 
         {/* Map Section */}
         <Card className="mt-8">
-          <h2 className="text-2xl font-bold mb-4">Find Us On Map</h2>
+          <h2 className="text-2xl font-bold mb-4 text-gray-600">Find Us On Map</h2>
           <div className="aspect-video bg-gray-300 rounded-lg flex items-center justify-center">
             <p className="text-gray-600">
               Map will be displayed here (integrate Google Maps)
@@ -214,7 +214,7 @@ export default function ContactPage() {
 
         {/* FAQ Section */}
         <div className="mt-12">
-          <h2 className="text-2xl font-bold mb-8 text-center">Frequently Asked Questions</h2>
+          <h2 className="text-2xl font-bold mb-8 text-center text-gray-600">Frequently Asked Questions</h2>
           <div className="grid md:grid-cols-2 gap-6">
             {[
               {
@@ -235,7 +235,7 @@ export default function ContactPage() {
               },
             ].map((faq, idx) => (
               <Card key={idx}>
-                <h3 className="font-bold text-lg mb-2">{faq.q}</h3>
+                <h3 className="font-bold text-lg mb-2 text-gray-600">{faq.q}</h3>
                 <p className="text-gray-700 text-sm">{faq.a}</p>
               </Card>
             ))}

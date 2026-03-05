@@ -33,7 +33,7 @@ export default function EventsPage() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Calendar View Toggle */}
         <div className="mb-8 flex justify-between items-center">
-          <h2 className="text-2xl font-bold">Upcoming Events</h2>
+          <h2 className="text-2xl font-bold text-gray-600">Upcoming Events</h2>
           <Button variant="secondary" className="font-bold py-2">
             <Calendar size={20} className="inline mr-2" />
             View Calendar View
@@ -48,7 +48,7 @@ export default function EventsPage() {
                 <Calendar size={64} className="text-white opacity-30" />
               </div>
               <div className="flex-grow">
-                <h3 className="text-2xl font-bold mb-2">{event.title}</h3>
+                <h3 className="text-2xl font-bold mb-2 text-gray-600">{event.title}</h3>
                 <p className="text-gray-600 mb-4">{event.description}</p>
 
                 <div className="space-y-2 mb-6">

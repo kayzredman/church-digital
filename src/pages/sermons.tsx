@@ -78,7 +78,7 @@ export default function SermonsPage() {
               <div className="aspect-video bg-gradient-to-br from-blue-400 to-blue-600 rounded-lg mb-4 flex items-center justify-center">
                 <Music size={48} className="text-white opacity-50" />
               </div>
-              <h3 className="font-bold text-lg mb-1">{sermon.title}</h3>
+              <h3 className="font-bold text-lg mb-1 text-gray-600">{sermon.title}</h3>
               <p className="text-gray-600 text-sm mb-2">Speaker: {sermon.speaker}</p>
               <div className="text-gray-500 text-xs mb-4">
                 <p className="font-medium">📅 {sermon.date}</p>
