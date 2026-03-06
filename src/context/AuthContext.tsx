@@ -32,16 +32,39 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          // Fetch user role from database
-          const { data } = await supabase
-            .from('users')
-            .select('role')
-            .eq('id', session.user.id)
-            .single();
-          setUserRole(data?.role);
+          // Fetch user role from database with timeout
+          try {
+            const timeoutPromise = new Promise((_, reject) =>
+              setTimeout(() => reject(new Error('Role fetch timeout')), 5000)
+            );
+            
+            const { data, error } = await Promise.race([
+              supabase
+                .from('users')
+                .select('role')
+                .eq('id', session.user.id)
+                .single(),
+              timeoutPromise,
+            ]) as any;
+
+            if (!error && data?.role) {
+              setUserRole(data.role);
+            } else {
+              // If users table doesn't exist or user record not found, default to 'user'
+              setUserRole('user');
+              console.warn('Could not fetch user role, defaulting to user');
+            }
+          } catch (roleError) {
+            console.warn('Role fetch failed:', roleError);
+            // Default to user if role fetch fails
+            setUserRole('user');
+          }
+        } else {
+          setUserRole(undefined);
         }
       } catch (error) {
         console.error('Error checking session:', error);
+        setUserRole(undefined);
       } finally {
         setLoading(false);
       }
@@ -56,12 +79,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setUser(session?.user ?? null);
 
       if (session?.user) {
-        const { data } = await supabase
-          .from('users')
-          .select('role')
-          .eq('id', session.user.id)
-          .single();
-        setUserRole(data?.role);
+        try {
+          const timeoutPromise = new Promise((_, reject) =>
+            setTimeout(() => reject(new Error('Role fetch timeout')), 5000)
+          );
+
+          const { data, error } = await Promise.race([
+            supabase
+              .from('users')
+              .select('role')
+              .eq('id', session.user.id)
+              .single(),
+            timeoutPromise,
+          ]) as any;
+
+          if (!error && data?.role) {
+            setUserRole(data.role);
+          } else {
+            setUserRole('user');
+          }
+        } catch (roleError) {
+          console.warn('Role fetch failed during auth change:', roleError);
+          setUserRole('user');
+        }
       } else {
         setUserRole(undefined);
       }
@@ -71,12 +111,33 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
 
     if (error) throw error;
+
+    // Auto-assign admin role in development mode
+    if (data.user) {
+      const isDev = process.env.NEXT_PUBLIC_DEV_MODE === 'true';
+      const roleToAssign = isDev ? 'admin' : 'user';
+
+      // Create user record with role
+      const { error: insertError } = await supabase.from('users').insert([
+        {
+          id: data.user.id,
+          email: data.user.email,
+          role: roleToAssign,
+          created_at: new Date().toISOString(),
+        },
+      ]);
+
+      if (insertError) {
+        console.error('Error creating user record:', insertError);
+        // Don't throw - user auth succeeded even if role assignment failed
+      }
+    }
   };
 
   const signIn = async (email: string, password: string) => {

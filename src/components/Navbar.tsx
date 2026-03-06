@@ -1,20 +1,39 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Menu, X, ChevronDown } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const userDropdownRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, user, userRole, signOut } = useAuth();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  const toggleUserDropdown = () => setIsUserDropdownOpen(!isUserDropdownOpen);
+
   const handleSignOut = async () => {
     await signOut();
     setIsOpen(false);
+    setIsUserDropdownOpen(false);
   };
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userDropdownRef.current && !userDropdownRef.current.contains(event.target as Node)) {
+        setIsUserDropdownOpen(false);
+      }
+    };
+
+    if (isUserDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [isUserDropdownOpen]);
 
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-md">
@@ -50,27 +69,33 @@ export function Navbar() {
             </Link>
 
             {isAuthenticated ? (
-              <div className="relative group">
-                <button className="flex items-center space-x-2 text-gray-700 hover:text-blue-600">
+              <div className="relative" ref={userDropdownRef}>
+                <button 
+                  onClick={toggleUserDropdown}
+                  className="flex items-center space-x-2 text-gray-700 hover:text-blue-600"
+                >
                   <span>{user?.email}</span>
                   <ChevronDown size={16} />
                 </button>
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg opacity-0 group-hover:opacity-100 invisible group-hover:visible transition">
-                  {userRole === 'admin' && (
-                    <Link
-                      href="/admin"
-                      className="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm"
+                {isUserDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-50">
+                    {userRole === 'admin' && (
+                      <Link
+                        href="/admin"
+                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm"
+                        onClick={() => setIsUserDropdownOpen(false)}
+                      >
+                        Admin Dashboard
+                      </Link>
+                    )}
+                    <button
+                      onClick={handleSignOut}
+                      className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm"
                     >
-                      Admin Dashboard
-                    </Link>
-                  )}
-                  <button
-                    onClick={handleSignOut}
-                    className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm"
-                  >
-                    Sign Out
-                  </button>
-                </div>
+                      Sign Out
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <Link

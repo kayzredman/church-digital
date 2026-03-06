@@ -16,7 +16,7 @@ export default function SermonsPage() {
       category: categories[i % categories.length],
       date: new Date(2024, 2, 10 + i).toLocaleDateString(),
       duration: '45:00',
-      views: Math.floor(Math.random() * 1000),
+      views: (i + 1) * 87, // Deterministic views based on index
     }));
 
   const filteredSermons =

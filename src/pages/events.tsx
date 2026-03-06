@@ -13,7 +13,7 @@ export default function EventsPage() {
       date: new Date(2024, 2, 15 + i * 2),
       location: 'Main Sanctuary',
       capacity: 500,
-      registered: Math.floor(Math.random() * 400),
+      registered: (i + 1) * 65, // Deterministic registered count based on index
       image: '',
     }));
 
