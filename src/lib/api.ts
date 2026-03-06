@@ -65,7 +65,7 @@ export const api = {
 
   // Settings
   getSettings: () => apiClient.get('/settings'),
-  updateSettings: (data: any) => apiClient.put('/settings', data),
+  updateSettings: (data: any) => apiClient.post('/settings', { data }),
 
   // Users
   getUsers: () => apiClient.get('/users'),

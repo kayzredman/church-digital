@@ -1,0 +1,10 @@
+{
+  "terminal.integrated.defaultProfile.osx": "Git Bash",
+  "terminal.integrated.profiles.osx": {
+    "Git Bash": {
+      "path": "/usr/local/bin/bash",
+      "args": ["--login"],
+      "env": {}
+    }
+  }
+}

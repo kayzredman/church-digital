@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Card, Button } from '@/components';
 import { Heart, Calendar, Music, Users, Zap } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { api } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
 
 interface Sermon {
@@ -20,19 +21,21 @@ interface Event {
   time: string;
   location: string;
 }
-
 export default function Home() {
   const [latestSermons, setLatestSermons] = useState<Sermon[]>([]);
   const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
+  const [serviceTimes, setServiceTimes] = useState<any[]>([]);
 
   useEffect(() => {
     const loadData = async () => {
-      const [sermonsRes, eventsRes] = await Promise.all([
+      const [sermonsRes, eventsRes, settingsRes] = await Promise.all([
         supabase.from('sermons').select('*').order('date', { ascending: false }).limit(3),
         supabase.from('events').select('*').order('date', { ascending: true }).limit(2),
+        api.getSettings(),
       ]);
       if (sermonsRes.data) setLatestSermons(sermonsRes.data);
       if (eventsRes.data) setUpcomingEvents(eventsRes.data);
+      if (settingsRes.data && settingsRes.data.serviceTimes) setServiceTimes(settingsRes.data.serviceTimes);
     };
     loadData();
   }, []);
@@ -79,33 +82,28 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-600">Service Times</h2>
           <div className="grid md:grid-cols-3 gap-6">
-            <Card className="text-center hover:shadow-lg transition">
-              <div className="flex justify-center mb-3">
-                <Calendar size={32} className="text-blue-600" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-600">⛪ Sunday Morning</h3>
-              <p className="text-gray-700 font-semibold mb-1">🕘 9:00 AM - 11:00 AM</p>
-              <p className="text-gray-600 mb-4">📍 Main Sanctuary</p>
-              <p className="text-sm text-gray-500 italic">Traditional worship with music & teaching</p>
-            </Card>
-            <Card className="text-center hover:shadow-lg transition">
-              <div className="flex justify-center mb-3">
-                <Users size={32} className="text-purple-600" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-600">🎉 Sunday Evening</h3>
-              <p className="text-gray-700 font-semibold mb-1">🕔 5:00 PM - 6:30 PM</p>
-              <p className="text-gray-600 mb-4">📍 Fellowship Hall</p>
-              <p className="text-sm text-gray-500 italic">Contemporary worship & community fellowship</p>
-            </Card>
-            <Card className="text-center hover:shadow-lg transition">
-              <div className="flex justify-center mb-3">
-                <Zap size={32} className="text-yellow-600" />
-              </div>
-              <h3 className="text-xl font-bold mb-3 text-gray-600">🙏 Wednesday Prayer</h3>
-              <p className="text-gray-700 font-semibold mb-1">🕖 7:00 PM - 8:00 PM</p>
-              <p className="text-gray-600 mb-4">📍 Prayer Room</p>
-              <p className="text-sm text-gray-500 italic">Midweek prayer & spiritual renewal</p>
-            </Card>
+            {serviceTimes.length === 0 ? (
+              <p className="col-span-3 text-center text-gray-500">No service times available.</p>
+            ) : (
+              serviceTimes.map((service, idx) => (
+                <Card key={idx} className="text-center hover:shadow-lg transition">
+                  <div className="flex justify-center mb-3">
+                    {/* Icon selection based on index or service name */}
+                    {idx === 0 ? (
+                      <Calendar size={32} className="text-blue-600" />
+                    ) : idx === 1 ? (
+                      <Users size={32} className="text-purple-600" />
+                    ) : (
+                      <Zap size={32} className="text-yellow-600" />
+                    )}
+                  </div>
+                  <h3 className="text-xl font-bold mb-3 text-gray-600">{service.name}</h3>
+                  <p className="text-gray-700 font-semibold mb-1">🕘 {service.startTime} - {service.endTime}</p>
+                  <p className="text-gray-600 mb-4">📍 {service.location}</p>
+                  <p className="text-sm text-gray-500 italic">{service.description}</p>
+                </Card>
+              ))
+            )}
           </div>
         </div>
       </section>
