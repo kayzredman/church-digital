@@ -8,6 +8,8 @@ import { useAuth } from '@/context/AuthContext';
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false);
+  const [isMediaDropdownOpen, setIsMediaDropdownOpen] = useState(false);
+  const mediaDropdownTimeout = useRef<NodeJS.Timeout | null>(null);
   const userDropdownRef = useRef<HTMLDivElement>(null);
   const { isAuthenticated, user, userRole, signOut } = useAuth();
 
@@ -35,6 +37,23 @@ export function Navbar() {
     }
   }, [isUserDropdownOpen]);
 
+  // Dropdown open/close helpers with delay
+  const openMediaDropdown = () => {
+    if (mediaDropdownTimeout.current) {
+      clearTimeout(mediaDropdownTimeout.current);
+      mediaDropdownTimeout.current = null;
+    }
+    setIsMediaDropdownOpen(true);
+  };
+  const closeMediaDropdown = () => {
+    if (mediaDropdownTimeout.current) {
+      clearTimeout(mediaDropdownTimeout.current);
+    }
+    mediaDropdownTimeout.current = setTimeout(() => {
+      setIsMediaDropdownOpen(false);
+    }, 150);
+  };
+
   return (
     <nav className="sticky top-0 z-50 bg-white shadow-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -58,9 +77,36 @@ export function Navbar() {
             <Link href="/events" className="text-gray-700 hover:text-blue-600 transition">
               Events
             </Link>
-            <Link href="/blog" className="text-gray-700 hover:text-blue-600 transition">
-              Blog
-            </Link>
+            {/* Media Dropdown (state-based) */}
+            <div
+              className="relative"
+              onMouseEnter={openMediaDropdown}
+              onMouseLeave={closeMediaDropdown}
+            >
+              <button
+                className="flex items-center text-gray-700 hover:text-blue-600 transition focus:outline-none"
+                aria-haspopup="true"
+                aria-expanded={isMediaDropdownOpen}
+                tabIndex={0}
+                onFocus={openMediaDropdown}
+                onBlur={closeMediaDropdown}
+              >
+                <span>Media</span>
+                <ChevronDown size={16} className="ml-1" />
+              </button>
+              {isMediaDropdownOpen && (
+                <div
+                  className="absolute left-0 mt-2 w-44 bg-white rounded-lg shadow-lg z-50"
+                  onMouseEnter={openMediaDropdown}
+                  onMouseLeave={closeMediaDropdown}
+                >
+                  <Link href="/blog" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm" tabIndex={0} onFocus={openMediaDropdown} onBlur={closeMediaDropdown}>Blog</Link>
+                  <Link href="/podcasts" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm" tabIndex={0} onFocus={openMediaDropdown} onBlur={closeMediaDropdown}>Podcasts</Link>
+                  <Link href="/socials" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm" tabIndex={0} onFocus={openMediaDropdown} onBlur={closeMediaDropdown}>Socials</Link>
+                  <Link href="/live-streams" className="block px-4 py-2 text-gray-700 hover:bg-gray-100 text-sm" tabIndex={0} onFocus={openMediaDropdown} onBlur={closeMediaDropdown}>Live Streams</Link>
+                </div>
+              )}
+            </div>
             <Link href="/about" className="text-gray-700 hover:text-blue-600 transition">
               About
             </Link>
@@ -125,42 +171,52 @@ export function Navbar() {
             <Link
               href="/"
               className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+              onClick={() => setIsOpen(false)}
             >
               Home
             </Link>
             <Link
               href="/sermons"
               className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+              onClick={() => setIsOpen(false)}
             >
               Sermons
             </Link>
             <Link
               href="/events"
               className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+              onClick={() => setIsOpen(false)}
             >
               Events
             </Link>
-            <Link
-              href="/blog"
-              className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
-            >
-              Blog
-            </Link>
+            {/* Media expandable section */}
+            <details className="px-2">
+              <summary className="block px-2 py-2 text-gray-700 hover:bg-gray-100 rounded-lg cursor-pointer select-none">Media</summary>
+              <div className="pl-4 flex flex-col space-y-1">
+                <Link href="/blog" className="block px-2 py-1 text-gray-700 hover:bg-gray-100 rounded" onClick={() => setIsOpen(false)}>Blog</Link>
+                <Link href="/podcasts" className="block px-2 py-1 text-gray-700 hover:bg-gray-100 rounded" onClick={() => setIsOpen(false)}>Podcasts</Link>
+                <Link href="/socials" className="block px-2 py-1 text-gray-700 hover:bg-gray-100 rounded" onClick={() => setIsOpen(false)}>Socials</Link>
+                <Link href="/live-streams" className="block px-2 py-1 text-gray-700 hover:bg-gray-100 rounded" onClick={() => setIsOpen(false)}>Live Streams</Link>
+              </div>
+            </details>
             <Link
               href="/about"
               className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+              onClick={() => setIsOpen(false)}
             >
               About
             </Link>
             <Link
               href="/give"
               className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+              onClick={() => setIsOpen(false)}
             >
               Give
             </Link>
             <Link
               href="/contact"
               className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+              onClick={() => setIsOpen(false)}
             >
               Contact
             </Link>
