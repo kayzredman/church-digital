@@ -108,6 +108,25 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Find Us On Map */}
+      <section className="bg-white py-12">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center mb-8 text-gray-600">Find Us On Map</h2>
+          <div className="rounded-lg overflow-hidden shadow-lg border">
+            <iframe
+              title="Elim City - Throne Room Map"
+              width="100%"
+              height="400"
+              style={{ border: 0 }}
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+              src="https://www.google.com/maps?q=Elim%20City%20Throne%20Room%2C%20123%20Faith%20Street%2C%20Lagos%2C%20Nigeria&output=embed"
+            ></iframe>
+          </div>
+        </div>
+      </section>
+
       {/* Featured Sermons */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

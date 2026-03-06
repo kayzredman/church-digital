@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Input, Button, Textarea } from '@/components';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
 import { useToast } from '@/hooks';
+import { apiClient } from '@/lib/api';
+import { getSupabaseClient } from '@/lib/supabase';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -13,6 +15,39 @@ export default function ContactPage() {
   });
   const [loading, setLoading] = useState(false);
   const toast = useToast();
+
+  // Settings state
+  const [settings, setSettings] = useState(null);
+  const [settingsLoading, setSettingsLoading] = useState(true);
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await apiClient.get('/settings');
+        setSettings(res.data);
+        console.log('Fetched settings:', res.data);
+      } catch (err) {
+        setSettings(null);
+        console.error('Failed to fetch settings:', err);
+      } finally {
+        setSettingsLoading(false);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const res = await apiClient.get('/settings');
+        setSettings(res.data);
+      } catch (err) {
+        setSettings(null);
+      } finally {
+        setSettingsLoading(false);
+      }
+    };
+    fetchSettings();
+  }, []);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -76,11 +111,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-bold text-lg mb-1 text-gray-600">Address</h3>
                   <p className="text-gray-700 text-sm">
-                    123 Church Street
-                    <br />
-                    Your City, State 12345
-                    <br />
-                    Country
+                    {settingsLoading ? 'Loading...' : settings?.churchAddress || 'Address unavailable'}
                   </p>
                 </div>
               </div>
@@ -92,9 +123,11 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-bold text-lg mb-1 text-gray-600">Phone</h3>
                   <p className="text-gray-700 text-sm">
-                    <a href="tel:+234xxx" style={{ color: '#26701c' }} className="hover:underline">
-                      +234 XXX XXX XXXX
-                    </a>
+                    {settingsLoading ? 'Loading...' : (
+                      <a href={`tel:${settings?.churchPhone || ''}`} style={{ color: '#26701c' }} className="hover:underline">
+                        {settings?.churchPhone || 'Phone unavailable'}
+                      </a>
+                    )}
                   </p>
                 </div>
               </div>
@@ -106,13 +139,15 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-bold text-lg mb-1 text-gray-600">Email</h3>
                   <p className="text-gray-700 text-sm">
-                    <a
-                      href="mailto:info@elimthronerm.com"
-                      style={{ color: '#26701c' }}
-                      className="hover:underline"
-                    >
-                      info@elimthronerm.com
-                    </a>
+                    {settingsLoading ? 'Loading...' : (
+                      <a
+                        href={`mailto:${settings?.churchEmail || ''}`}
+                        style={{ color: '#26701c' }}
+                        className="hover:underline"
+                      >
+                        {settings?.churchEmail || 'Email unavailable'}
+                      </a>
+                    )}
                   </p>
                 </div>
               </div>
@@ -123,13 +158,19 @@ export default function ContactPage() {
                 <Clock size={24} className="mt-1 flex-shrink-0" style={{ color: '#49b93b' }} />
                 <div>
                   <h3 className="font-bold text-lg mb-1 text-gray-600">Service Hours</h3>
-                  <p className="text-gray-700 text-sm">
-                    Sunday: 9:00 AM - 6:00 PM
-                    <br />
-                    Wednesday: 7:00 PM - 8:00 PM
-                    <br />
-                    Friday: 8:00 PM - 10:00 PM
-                  </p>
+                  <div className="text-gray-700 text-sm">
+                    {settingsLoading ? 'Loading...' : (
+                      settings?.serviceTimes && settings.serviceTimes.length > 0 ? (
+                        <ul>
+                          {settings.serviceTimes.map((service, idx) => (
+                            <li key={idx}>
+                              <span className="font-semibold">{service.day}:</span> {service.name} ({service.startTime} - {service.endTime})
+                            </li>
+                          ))}
+                        </ul>
+                      ) : 'No service hours available'
+                    )}
+                  </div>
                 </div>
               </div>
             </Card>
@@ -210,12 +251,20 @@ export default function ContactPage() {
         {/* Map Section */}
         <Card className="mt-8">
           <h2 className="text-2xl font-bold mb-4 text-gray-600">Find Us On Map</h2>
-          <div className="aspect-video bg-gray-300 rounded-lg flex items-center justify-center">
-            <p className="text-gray-600">
-              Map will be displayed here (integrate Google Maps)
-            </p>
+          <div className="rounded-lg overflow-hidden">
+            <iframe
+              title="Elim City - Throne Room Map"
+              width="100%"
+              height="400"
+              style={{ border: 0 }}
+              loading="lazy"
+              allowFullScreen
+              referrerPolicy="no-referrer-when-downgrade"
+              src={`https://www.google.com/maps?q=${encodeURIComponent(settings?.churchAddress || 'Elim City Throne Room, 123 Faith Street, Lagos, Nigeria')}&output=embed`}
+            ></iframe>
           </div>
         </Card>
+
 
         {/* FAQ Section */}
         <div className="mt-12">

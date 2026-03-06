@@ -147,6 +147,8 @@ export default function Settings() {
       await api.updateSettings(settings);
       setSaved(true);
       setTimeout(() => setSaved(false), 3000);
+      // Notify user to refresh contact page
+      alert('Settings saved! Please refresh the Contact page to see updates.');
     } catch (error) {
       setError('Failed to save settings.');
       console.error('Failed to save settings:', error);
