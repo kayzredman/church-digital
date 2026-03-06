@@ -15,7 +15,7 @@ export default function AdminDashboard() {
     totalDonations: 0,
     totalUsers: 0,
   });
-  const [loading, setLoading] = useState(true);
+  // Removed unused loading state
 
   useEffect(() => {
     // Wait for auth to finish loading before checking permissions
@@ -40,7 +40,7 @@ export default function AdminDashboard() {
         ]);
 
         const totalDonationAmount = (donationsRes.data || []).reduce(
-          (sum: number, d: any) => sum + Number(d.amount), 0
+          (sum: number, d: { amount: number }) => sum + Number(d.amount), 0
         );
 
         setStats({
@@ -67,7 +67,7 @@ export default function AdminDashboard() {
   // Show loading state while auth is initializing
   if (authLoading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-600 to-blue-800">
+      <div className="flex items-center justify-center min-h-screen bg-linear-to-r from-blue-600 to-blue-800">
         <div className="text-center">
           <div className="inline-flex items-center justify-center w-12 h-12 bg-white rounded-full animate-spin mb-4">
             <div className="w-8 h-8 bg-blue-600 rounded-full"></div>
@@ -80,10 +80,10 @@ export default function AdminDashboard() {
 
   if (!isAuthenticated || userRole !== 'admin') {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-600 to-blue-800">
+      <div className="flex items-center justify-center min-h-screen bg-linear-to-r from-blue-600 to-blue-800">
         <Card className="p-8 text-center">
           <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
-          <p className="text-gray-600 mb-6">You don't have permission to access this page.</p>
+          <p className="text-gray-600 mb-6">You don&apos;t have permission to access this page.</p>
           <Link href="/">
             <Button>Back to Home</Button>
           </Link>

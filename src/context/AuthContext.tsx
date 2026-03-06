@@ -50,14 +50,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             if (!error && data?.role) {
               setUserRole(data.role);
             } else {
-              // If users table doesn't exist or user record not found, default to 'user'
-              setUserRole('user');
-              console.warn('Could not fetch user role, defaulting to user');
+              // If users table doesn't exist or user record not found, default to 'visitor'
+              setUserRole('visitor');
+              console.warn('Could not fetch user role, defaulting to visitor');
             }
           } catch (roleError) {
             console.warn('Role fetch failed:', roleError);
-            // Default to user if role fetch fails
-            setUserRole('user');
+            // Default to visitor if role fetch fails
+            setUserRole('visitor');
           }
         } else {
           setUserRole(undefined);
@@ -96,11 +96,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           if (!error && data?.role) {
             setUserRole(data.role);
           } else {
-            setUserRole('user');
+            setUserRole('visitor');
           }
         } catch (roleError) {
           console.warn('Role fetch failed during auth change:', roleError);
-          setUserRole('user');
+          setUserRole('visitor');
         }
       } else {
         setUserRole(undefined);

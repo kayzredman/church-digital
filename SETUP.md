@@ -124,7 +124,7 @@ CREATE TABLE users (
   email TEXT UNIQUE NOT NULL,
   firstName TEXT,
   lastName TEXT,
-  role TEXT DEFAULT 'member',
+  role TEXT CHECK (role IN ('admin', 'editor', 'contributor', 'member', 'visitor')) DEFAULT 'member',
   avatar TEXT,
   createdAt TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updatedAt TIMESTAMP WITH TIME ZONE DEFAULT NOW()

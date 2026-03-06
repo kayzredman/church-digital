@@ -5,7 +5,7 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  role: "admin" | "editor" | "contributor" | "member";
+  role: "admin" | "editor" | "contributor" | "member" | "visitor";
   avatar?: string;
   createdAt: string;
   updatedAt: string;

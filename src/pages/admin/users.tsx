@@ -1,297 +1,352 @@
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useAuth } from '@/context/AuthContext';
-import { Card, Button, Input } from '@/components';
-import { ArrowLeft, Trash2, Edit2, Search } from 'lucide-react';
 
+import React, { useState, useEffect } from 'react';
+import { Card, Button } from '@/components';
+import { Search, Edit2, Trash2 } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+
+type UserRole = 'admin' | 'editor' | 'contributor' | 'member' | 'visitor';
+type UserStatus = 'active' | 'inactive';
 interface User {
   id: string;
-  email: string;
   name: string;
-  role: 'user' | 'admin';
-  joinDate: string;
-  status: 'active' | 'inactive';
+  email: string;
+  role: UserRole;
+  status: UserStatus;
   totalDonations: number;
+  joinDate: string;
 }
 
-export default function UserManagement() {
-  const { isAuthenticated, userRole, loading: authLoading } = useAuth();
-  const router = useRouter();
+export default function AdminUsers() {
   const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editingRole, setEditingRole] = useState<'user' | 'admin'>('user');
+  const [editingRole, setEditingRole] = useState<UserRole>('member');
+  const [editingName, setEditingName] = useState('');
+  const [editingEmail, setEditingEmail] = useState('');
   const [loading, setLoading] = useState(true);
+  // Add user form state
+  const [addName, setAddName] = useState('');
+  const [addEmail, setAddEmail] = useState('');
+  const [addRole, setAddRole] = useState<UserRole>('member');
+  const [addStatus, setAddStatus] = useState<UserStatus>('active');
 
   useEffect(() => {
-    if (authLoading) {
-      return;
-    }
-
-    if (!isAuthenticated || userRole !== 'admin') {
-      router.push('/auth/login');
-      return;
-    }
-
-    // Fetch users from API
+    // Fetch users from Supabase
     const fetchUsers = async () => {
-      try {
-        // TODO: Replace with actual API call
-        setUsers([
-          {
-            id: '1',
-            email: 'john@example.com',
-            name: 'John Doe',
-            role: 'admin',
-            joinDate: '2024-01-15',
-            status: 'active',
-            totalDonations: 50000,
-          },
-          {
-            id: '2',
-            email: 'jane@example.com',
-            name: 'Jane Smith',
-            role: 'user',
-            joinDate: '2024-02-10',
-            status: 'active',
-            totalDonations: 15000,
-          },
-          {
-            id: '3',
-            email: 'mike@example.com',
-            name: 'Mike Johnson',
-            role: 'user',
-            joinDate: '2024-02-20',
-            status: 'active',
-            totalDonations: 8000,
-          },
-          {
-            id: '4',
-            email: 'sarah@example.com',
-            name: 'Sarah Williams',
-            role: 'user',
-            joinDate: '2024-03-01',
-            status: 'active',
-            totalDonations: 0,
-          },
-          {
-            id: '5',
-            email: 'mark@example.com',
-            name: 'Mark Brown',
-            role: 'user',
-            joinDate: '2024-03-05',
-            status: 'inactive',
-            totalDonations: 5000,
-          },
-        ]);
-      } catch (error) {
-        console.error('Failed to fetch users:', error);
-      } finally {
-        setLoading(false);
+      setLoading(true);
+      const { data, error } = await supabase.from('users').select('*');
+      if (error) {
+        // Optionally handle error (show toast, etc.)
+        setUsers([]);
+      } else {
+        // Map/normalize data if needed
+        setUsers(
+          (data || []).map((u: any) => ({
+            id: u.id,
+            name: u.name || '',
+            email: u.email || '',
+            role: u.role || 'visitor',
+            status: u.status || 'inactive',
+            totalDonations: u.totalDonations || 0,
+            joinDate: u.joinDate || u.created_at || '',
+          }))
+        );
       }
+      setLoading(false);
     };
-
     fetchUsers();
-  }, [authLoading, isAuthenticated, userRole, router]);
-
-  const handleRoleChange = async (userId: string, newRole: 'user' | 'admin') => {
-    // TODO: Call API to update user role
-    setUsers(users.map(u => u.id === userId ? { ...u, role: newRole } : u));
-    setEditingId(null);
-  };
-
-  const handleStatusChange = async (userId: string, newStatus: 'active' | 'inactive') => {
-    // TODO: Call API to update user status
-    setUsers(users.map(u => u.id === userId ? { ...u, status: newStatus } : u));
-  };
-
-  const handleDelete = (id: string) => {
-    if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-      // TODO: Call API to delete user
-      setUsers(users.filter(u => u.id !== id));
-    }
-  };
+  }, []);
 
   const filteredUsers = users.filter(user => {
-    const matchesSearch = user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         user.name.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesRole = roleFilter === 'all' || user.role === roleFilter;
+    const matchesSearch =
+      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesRole = roleFilter === 'all' ? true : user.role === roleFilter;
     return matchesSearch && matchesRole;
   });
 
-  if (authLoading) {
+
+
+  const handleEdit = (user: User) => {
+    setEditingId(user.id);
+    setEditingRole(user.role);
+    setEditingName(user.name);
+    setEditingEmail(user.email);
+  };
+
+  const handleEditSave = async (userId: string) => {
+    const { error } = await supabase.from('users').update({
+      name: editingName,
+      email: editingEmail,
+      role: editingRole,
+    }).eq('id', userId);
+    if (!error) {
+      setUsers(prev => prev.map(u =>
+        u.id === userId ? { ...u, name: editingName, email: editingEmail, role: editingRole } : u
+      ));
+      setEditingId(null);
+    } else {
+      alert('Failed to update user');
+    }
+  };
+
+  const handleRoleChange = async (userId: string, newRole: UserRole) => {
+    setEditingRole(newRole);
+  };
+
+  const handleStatusChange = async (userId: string, newStatus: UserStatus) => {
+    const { error } = await supabase.from('users').update({ status: newStatus }).eq('id', userId);
+    if (!error) {
+      setUsers(prev =>
+        prev.map(u =>
+          u.id === userId ? { ...u, status: newStatus } : u
+        )
+      );
+    } else {
+      alert('Failed to update status');
+    }
+  };
+
+  const handleDelete = async (userId: string) => {
+    const { error } = await supabase.from('users').delete().eq('id', userId);
+    if (!error) {
+      setUsers(prev => prev.filter(u => u.id !== userId));
+    } else {
+      alert('Failed to delete user');
+    }
+  };
+
+  const handleAddUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!addName || !addEmail) {
+      alert('Name and email are required');
+      return;
+    }
+    const { data, error } = await supabase.from('users').insert([
+      {
+        name: addName,
+        email: addEmail,
+        role: addRole,
+        status: addStatus,
+      },
+    ]).select();
+    if (!error && data && data.length > 0) {
+      setUsers(prev => [...prev, {
+        id: data[0].id,
+        name: addName,
+        email: addEmail,
+        role: addRole,
+        status: addStatus,
+        totalDonations: 0,
+        joinDate: data[0].created_at || '',
+      }]);
+      setAddName('');
+      setAddEmail('');
+      setAddRole('member');
+      setAddStatus('active');
+    } else {
+      alert('Failed to add user');
+    }
+  };
+
+  if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-600 to-blue-800">
-        <div className="text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-white rounded-full animate-spin mb-4">
-            <div className="w-8 h-8 bg-blue-600 rounded-full"></div>
-          </div>
-          <p className="text-white text-lg">Loading...</p>
-        </div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">Loading users...</div>
       </div>
     );
   }
 
-  if (!isAuthenticated || userRole !== 'admin') {
-    return null;
-  }
-
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Header */}
-      <div className="bg-white shadow-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center space-x-4">
-          <Link href="/admin">
-            <button className="text-blue-600 hover:text-blue-700 transition">
-              <ArrowLeft size={24} />
-            </button>
-          </Link>
-          <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-        </div>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Dashboard Stats - Top Row */}
+      <div className="flex flex-row gap-4 mb-8">
+        <Card className="flex-1 text-center bg-linear-to-r from-gray-100 to-gray-300 border border-gray-200">
+          <h3 className="text-sm font-semibold text-gray-600 mb-2">Total Users</h3>
+          <p className="text-3xl font-bold text-gray-900">{users.length}</p>
+        </Card>
+        <Card className="flex-1 text-center bg-linear-to-r from-purple-100 to-purple-200 border border-purple-200">
+          <h3 className="text-sm font-semibold text-purple-600 mb-2">Admins</h3>
+          <p className="text-3xl font-bold text-purple-800">{users.filter(u => u.role === 'admin').length}</p>
+        </Card>
+        <Card className="flex-1 text-center bg-linear-to-r from-green-100 to-green-200 border border-green-200">
+          <h3 className="text-sm font-semibold text-green-600 mb-2">Editors</h3>
+          <p className="text-3xl font-bold text-green-800">{users.filter(u => u.role === 'editor').length}</p>
+        </Card>
+        <Card className="flex-1 text-center bg-linear-to-r from-yellow-100 to-yellow-200 border border-yellow-200">
+          <h3 className="text-sm font-semibold text-yellow-600 mb-2">Contributors</h3>
+          <p className="text-3xl font-bold text-yellow-800">{users.filter(u => u.role === 'contributor').length}</p>
+        </Card>
+        <Card className="flex-1 text-center bg-linear-to-r from-blue-100 to-blue-200 border border-blue-200">
+          <h3 className="text-sm font-semibold text-blue-600 mb-2">Members</h3>
+          <p className="text-3xl font-bold text-blue-800">{users.filter(u => u.role === 'member').length}</p>
+        </Card>
+        <Card className="flex-1 text-center bg-linear-to-r from-gray-200 to-gray-400 border border-gray-300">
+          <h3 className="text-sm font-semibold text-gray-600 mb-2">Visitors</h3>
+          <p className="text-3xl font-bold text-gray-900">{users.filter(u => u.role === 'visitor').length}</p>
+        </Card>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Search and Filters */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <div className="flex-1">
-            <div className="relative">
-              <Search size={20} className="absolute left-3 top-3 text-gray-400" />
-              <input
-                type="text"
-                placeholder="Search users..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 text-gray-700"
-              />
-            </div>
+      {/* Search and Filters */}
+      <div className="flex flex-col sm:flex-row gap-4 mb-8">
+        <div className="flex-1">
+          <div className="relative">
+            <Search size={20} className="absolute left-3 top-3 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search users..."
+              value={searchTerm}
+              onChange={e => setSearchTerm(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 text-gray-700"
+            />
           </div>
-          <select
-            value={roleFilter}
-            onChange={(e) => setRoleFilter(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 text-gray-700"
-          >
-            <option value="all">All Roles</option>
-            <option value="admin">Admins</option>
-            <option value="user">Users</option>
-          </select>
         </div>
+        <select
+          value={roleFilter}
+          onChange={e => setRoleFilter(e.target.value)}
+          className="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 text-gray-700"
+        >
+          <option value="all">All Roles</option>
+          <option value="admin">Admins</option>
+          <option value="editor">Editors</option>
+          <option value="contributor">Contributors</option>
+          <option value="member">Members</option>
+          <option value="visitor">Visitors</option>
+        </select>
+      </div>
 
-        {/* Users Table */}
-        <Card className="overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Donations</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {filteredUsers.map(user => (
-                  <tr key={user.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{user.email}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      {editingId === user.id ? (
+      {/* Add User Form */}
+      <Card className="mb-8 p-6">
+        <form className="flex flex-col md:flex-row gap-4 items-end" onSubmit={handleAddUser}>
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+            <input type="text" value={addName} onChange={e => setAddName(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg" required />
+          </div>
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <input type="email" value={addEmail} onChange={e => setAddEmail(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg" required />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <select value={addRole} onChange={e => setAddRole(e.target.value as UserRole)} className="px-3 py-2 border border-gray-300 rounded-lg">
+              <option value="admin">Admin</option>
+              <option value="editor">Editor</option>
+              <option value="contributor">Contributor</option>
+              <option value="member">Member</option>
+              <option value="visitor">Visitor</option>
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
+            <select value={addStatus} onChange={e => setAddStatus(e.target.value as UserStatus)} className="px-3 py-2 border border-gray-300 rounded-lg">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+          <Button type="submit" className="px-6 py-2">Add User</Button>
+        </form>
+      </Card>
+
+      {/* Users Table */}
+      <Card className="overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Donations</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {filteredUsers.map(user => (
+                <tr key={user.id} className="hover:bg-gray-50">
+                  {editingId === user.id ? (
+                    <>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <input type="text" value={editingName} onChange={e => setEditingName(e.target.value)} className="px-2 py-1 border border-gray-300 rounded w-full" />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        <input type="email" value={editingEmail} onChange={e => setEditingEmail(e.target.value)} className="px-2 py-1 border border-gray-300 rounded w-full" />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <select value={editingRole} onChange={e => setEditingRole(e.target.value as UserRole)} className="px-2 py-1 text-sm border border-gray-300 rounded">
+                          <option value="admin">Admin</option>
+                          <option value="editor">Editor</option>
+                          <option value="contributor">Contributor</option>
+                          <option value="member">Member</option>
+                          <option value="visitor">Visitor</option>
+                        </select>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <select value={user.status} onChange={e => handleStatusChange(user.id, e.target.value as UserStatus)} className={`px-3 py-1 rounded-full text-xs font-medium cursor-pointer ${user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                          <option value="active">Active</option>
+                          <option value="inactive">Inactive</option>
+                        </select>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₦{user.totalDonations.toLocaleString()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{new Date(user.joinDate).toLocaleDateString()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <div className="flex gap-2">
-                          <select
-                            value={editingRole}
-                            onChange={(e) => setEditingRole(e.target.value as 'user' | 'admin')}
-                            className="px-2 py-1 text-sm border border-gray-300 rounded"
-                          >
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                          </select>
-                          <button
-                            onClick={() => handleRoleChange(user.id, editingRole)}
-                            className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700"
-                          >
-                            Save
-                          </button>
-                          <button
-                            onClick={() => setEditingId(null)}
-                            className="px-2 py-1 text-xs bg-gray-300 text-gray-900 rounded hover:bg-gray-400"
-                          >
-                            Cancel
-                          </button>
+                          <button onClick={() => handleEditSave(user.id)} className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">Save</button>
+                          <button onClick={() => setEditingId(null)} className="px-2 py-1 text-xs bg-gray-300 text-gray-900 rounded hover:bg-gray-400">Cancel</button>
                         </div>
-                      ) : (
+                      </td>
+                    </>
+                  ) : (
+                    <>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{user.email}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
-                          user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                          user.role === 'admin' ? 'bg-purple-100 text-purple-800'
+                          : user.role === 'editor' ? 'bg-green-100 text-green-800'
+                          : user.role === 'contributor' ? 'bg-yellow-100 text-yellow-800'
+                          : user.role === 'member' ? 'bg-blue-100 text-blue-800'
+                          : 'bg-gray-100 text-gray-800'
                         }`}>
                           {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                         </span>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <select
-                        value={user.status}
-                        onChange={(e) => handleStatusChange(user.id, e.target.value as 'active' | 'inactive')}
-                        className={`px-3 py-1 rounded-full text-xs font-medium cursor-pointer ${
-                          user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
-                        }`}
-                      >
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                      </select>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      ₦{user.totalDonations.toLocaleString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {new Date(user.joinDate).toLocaleDateString()}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => {
-                            setEditingId(user.id);
-                            setEditingRole(user.role);
-                          }}
-                          className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition"
-                          title="Edit role"
-                        >
-                          <Edit2 size={16} />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(user.id)}
-                          className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition"
-                          title="Delete user"
-                        >
-                          <Trash2 size={16} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </Card>
-
-        {/* Summary Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-          <Card className="text-center">
-            <h3 className="text-sm font-semibold text-gray-600 mb-2">Total Users</h3>
-            <p className="text-3xl font-bold text-gray-900">{users.length}</p>
-          </Card>
-          <Card className="text-center">
-            <h3 className="text-sm font-semibold text-gray-600 mb-2">Admin Users</h3>
-            <p className="text-3xl font-bold text-gray-900">{users.filter(u => u.role === 'admin').length}</p>
-          </Card>
-          <Card className="text-center">
-            <h3 className="text-sm font-semibold text-gray-600 mb-2">Active Users</h3>
-            <p className="text-3xl font-bold text-gray-900">{users.filter(u => u.status === 'active').length}</p>
-          </Card>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <select value={user.status} onChange={e => handleStatusChange(user.id, e.target.value as UserStatus)} className={`px-3 py-1 rounded-full text-xs font-medium cursor-pointer ${user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
+                          <option value="active">Active</option>
+                          <option value="inactive">Inactive</option>
+                        </select>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₦{user.totalDonations.toLocaleString()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{new Date(user.joinDate).toLocaleDateString()}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => handleEdit(user)}
+                            className="p-2 bg-blue-100 text-blue-600 rounded-lg hover:bg-blue-200 transition"
+                            title="Edit user"
+                          >
+                            <Edit2 size={16} />
+                          </button>
+                          <button
+                            onClick={() => handleDelete(user.id)}
+                            className="p-2 bg-red-100 text-red-600 rounded-lg hover:bg-red-200 transition"
+                            title="Delete user"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </td>
+                    </>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </div>
+      </Card>
     </div>
   );
 }
