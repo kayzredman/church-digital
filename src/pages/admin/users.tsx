@@ -8,7 +8,9 @@ type UserRole = 'admin' | 'editor' | 'contributor' | 'member' | 'visitor';
 type UserStatus = 'active' | 'inactive';
 interface User {
   id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
+  contactNumber: string;
   email: string;
   role: UserRole;
   status: UserStatus;
@@ -22,11 +24,16 @@ export default function AdminUsers() {
   const [roleFilter, setRoleFilter] = useState('all');
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editingRole, setEditingRole] = useState<UserRole>('member');
-  const [editingName, setEditingName] = useState('');
+  const [editingFirstName, setEditingFirstName] = useState('');
+  const [editingLastName, setEditingLastName] = useState('');
+  const [editingContactNumber, setEditingContactNumber] = useState('');
   const [editingEmail, setEditingEmail] = useState('');
   const [loading, setLoading] = useState(true);
   // Add user form state
-  const [addName, setAddName] = useState('');
+  // Removed addName, use addFirstName/addLastName
+  const [addFirstName, setAddFirstName] = useState('');
+  const [addLastName, setAddLastName] = useState('');
+  const [addContactNumber, setAddContactNumber] = useState('');
   const [addEmail, setAddEmail] = useState('');
   const [addRole, setAddRole] = useState<UserRole>('member');
   const [addStatus, setAddStatus] = useState<UserStatus>('active');
@@ -44,7 +51,9 @@ export default function AdminUsers() {
         setUsers(
           (data || []).map((u: any) => ({
             id: u.id,
-            name: u.name || '',
+            firstName: u.firstName || '',
+            lastName: u.lastName || '',
+            contactNumber: u.contactNumber || '',
             email: u.email || '',
             role: u.role || 'visitor',
             status: u.status || 'inactive',
@@ -60,7 +69,7 @@ export default function AdminUsers() {
 
   const filteredUsers = users.filter(user => {
     const matchesSearch =
-      user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      `${user.firstName} ${user.lastName}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesRole = roleFilter === 'all' ? true : user.role === roleFilter;
     return matchesSearch && matchesRole;
@@ -70,20 +79,24 @@ export default function AdminUsers() {
 
   const handleEdit = (user: User) => {
     setEditingId(user.id);
+    setEditingFirstName(user.firstName);
+    setEditingLastName(user.lastName);
+    setEditingContactNumber(user.contactNumber);
     setEditingRole(user.role);
-    setEditingName(user.name);
     setEditingEmail(user.email);
   };
 
   const handleEditSave = async (userId: string) => {
     const { error } = await supabase.from('users').update({
-      name: editingName,
+      firstName: editingFirstName,
+      lastName: editingLastName,
+      contactNumber: editingContactNumber,
       email: editingEmail,
       role: editingRole,
     }).eq('id', userId);
     if (!error) {
       setUsers(prev => prev.map(u =>
-        u.id === userId ? { ...u, name: editingName, email: editingEmail, role: editingRole } : u
+        u.id === userId ? { ...u, firstName: editingFirstName, lastName: editingLastName, contactNumber: editingContactNumber, email: editingEmail, role: editingRole } : u
       ));
       setEditingId(null);
     } else {
@@ -119,13 +132,15 @@ export default function AdminUsers() {
 
   const handleAddUser = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!addName || !addEmail) {
-      alert('Name and email are required');
+    if (!addFirstName || !addLastName || !addEmail) {
+      alert('First name, last name, and email are required');
       return;
     }
     const { data, error } = await supabase.from('users').insert([
       {
-        name: addName,
+        firstName: addFirstName,
+        lastName: addLastName,
+        contactNumber: addContactNumber,
         email: addEmail,
         role: addRole,
         status: addStatus,
@@ -134,14 +149,18 @@ export default function AdminUsers() {
     if (!error && data && data.length > 0) {
       setUsers(prev => [...prev, {
         id: data[0].id,
-        name: addName,
+        firstName: addFirstName,
+        lastName: addLastName,
+        contactNumber: addContactNumber,
         email: addEmail,
         role: addRole,
         status: addStatus,
         totalDonations: 0,
         joinDate: data[0].created_at || '',
       }]);
-      setAddName('');
+      setAddFirstName('');
+      setAddLastName('');
+      setAddContactNumber('');
       setAddEmail('');
       setAddRole('member');
       setAddStatus('active');
@@ -220,8 +239,16 @@ export default function AdminUsers() {
       <Card className="mb-8 p-6">
         <form className="flex flex-col md:flex-row gap-4 items-end" onSubmit={handleAddUser}>
           <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-            <input type="text" value={addName} onChange={e => setAddName(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg" required />
+            <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+            <input type="text" value={addFirstName} onChange={e => setAddFirstName(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg" required />
+          </div>
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+            <input type="text" value={addLastName} onChange={e => setAddLastName(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg" required />
+          </div>
+          <div className="flex-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">Contact No.</label>
+            <input type="text" value={addContactNumber} onChange={e => setAddContactNumber(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
           </div>
           <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
@@ -255,6 +282,7 @@ export default function AdminUsers() {
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact No.</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
@@ -269,7 +297,11 @@ export default function AdminUsers() {
                   {editingId === user.id ? (
                     <>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        <input type="text" value={editingName} onChange={e => setEditingName(e.target.value)} className="px-2 py-1 border border-gray-300 rounded w-full" />
+                        <input type="text" value={editingFirstName} onChange={e => setEditingFirstName(e.target.value)} placeholder="First Name" className="px-2 py-1 border border-gray-300 rounded w-full mb-1" />
+                        <input type="text" value={editingLastName} onChange={e => setEditingLastName(e.target.value)} placeholder="Last Name" className="px-2 py-1 border border-gray-300 rounded w-full" />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        <input type="text" value={editingContactNumber} onChange={e => setEditingContactNumber(e.target.value)} className="px-2 py-1 border border-gray-300 rounded w-full" />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         <input type="email" value={editingEmail} onChange={e => setEditingEmail(e.target.value)} className="px-2 py-1 border border-gray-300 rounded w-full" />
@@ -300,7 +332,8 @@ export default function AdminUsers() {
                     </>
                   ) : (
                     <>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.name}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.firstName} {user.lastName}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{user.contactNumber}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{user.email}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm">
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${

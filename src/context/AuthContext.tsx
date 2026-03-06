@@ -9,7 +9,7 @@ interface AuthContextType {
   loading: boolean;
   isAuthenticated: boolean;
   userRole?: string;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string, firstName: string, lastName: string, contactNumber: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
@@ -110,7 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const signUp = async (email: string, password: string) => {
+  const signUp = async (email: string, password: string, firstName: string, lastName: string, contactNumber: string) => {
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -121,18 +121,36 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Auto-assign admin role in development mode
     if (data.user) {
       const isDev = process.env.NEXT_PUBLIC_DEV_MODE === 'true';
-      const roleToAssign = isDev ? 'admin' : 'user';
+      const roleToAssign = isDev ? 'admin' : 'member';
 
-      // Create user record with role
-      const { error: insertError } = await supabase.from('users').insert([
-        {
-          id: data.user.id,
-          email: data.user.email,
-          role: roleToAssign,
-          created_at: new Date().toISOString(),
-        },
-      ]);
-
+      // Retry insert up to 5 times with 300ms delay if foreign key error
+      let attempt = 0;
+      let insertError = null;
+      while (attempt < 5) {
+        const { error: err } = await supabase.from('users').insert([
+          {
+            id: data.user.id,
+            email: data.user.email,
+            firstName,
+            lastName,
+            contactNumber,
+            role: roleToAssign,
+            created_at: new Date().toISOString(),
+          },
+        ]);
+        if (!err) {
+          insertError = null;
+          break;
+        }
+        insertError = err;
+        // Only retry on foreign key constraint error
+        if (err.code === '23503') {
+          await new Promise(res => setTimeout(res, 300));
+          attempt++;
+        } else {
+          break;
+        }
+      }
       if (insertError) {
         console.error('Error creating user record:', insertError);
         // Don't throw - user auth succeeded even if role assignment failed

@@ -11,6 +11,7 @@ export default function SignupPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
+  const [contactNumber, setContactNumber] = useState('');
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<any>({});
   const { signUp } = useAuth();
@@ -26,6 +27,7 @@ export default function SignupPage() {
     if (password !== confirmPassword) newErrors.confirmPassword = 'Passwords do not match';
     if (!firstName) newErrors.firstName = 'First name is required';
     if (!lastName) newErrors.lastName = 'Last name is required';
+    if (!contactNumber) newErrors.contactNumber = 'Contact number is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -39,7 +41,7 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      await signUp(email, password);
+      await signUp(email, password, firstName, lastName, contactNumber);
       toast.success('Account created successfully!');
       router.push('/');
     } catch (error: any) {
@@ -52,7 +54,7 @@ export default function SignupPage() {
   return (
     <div className="relative min-h-screen text-white flex items-center justify-center px-4 overflow-hidden">
       {/* Gradient Background with Transparency */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-600 to-blue-900 opacity-90"></div>
+      <div className="absolute inset-0 bg-linear-to-br from-blue-400 via-blue-600 to-blue-900 opacity-90"></div>
       
       {/* Content */}
       <div className="relative">
@@ -81,6 +83,14 @@ export default function SignupPage() {
               required
             />
           </div>
+          <Input
+            label="Contact Number"
+            placeholder="e.g. 08012345678"
+            value={contactNumber}
+            onChange={e => setContactNumber(e.target.value)}
+            error={errors.contactNumber}
+            required
+          />
 
           <Input
             type="email"
