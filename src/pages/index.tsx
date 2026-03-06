@@ -55,14 +55,14 @@ export default function Home() {
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4 mt-8">
               <Link href="/give">
-                <Button className="px-8 py-4 text-lg bg-white text-blue-600 hover:bg-gray-100 font-bold shadow-lg">
+                <Button variant="ghost" className="px-8 py-4 text-lg bg-white text-blue-600 hover:bg-gray-100 font-bold shadow-lg">
                   <Heart size={22} className="inline mr-3" />
                   Make a Donation
                 </Button>
               </Link>
               <Link href="/sermons">
                 <Button
-                  variant="secondary"
+                  variant="ghost"
                   className="px-8 py-4 text-lg border-2 border-white bg-transparent text-white hover:bg-blue-700 font-bold shadow-lg"
                 >
                   <Music size={22} className="inline mr-3" />
@@ -194,7 +194,7 @@ export default function Home() {
             Your generous giving helps us serve and impact our community with the love of Christ
           </p>
           <Link href="/give">
-            <Button className="px-8 py-4 text-lg bg-white text-blue-600 hover:bg-gray-100 font-bold shadow-lg">
+            <Button variant="ghost" className="px-8 py-4 text-lg bg-white text-blue-600 hover:bg-gray-100 font-bold shadow-lg">
               <Heart size={22} className="inline mr-3" />
               Give Now
             </Button>
