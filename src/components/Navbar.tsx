@@ -58,6 +58,9 @@ export function Navbar() {
             <Link href="/events" className="text-gray-700 hover:text-blue-600 transition">
               Events
             </Link>
+            <Link href="/blog" className="text-gray-700 hover:text-blue-600 transition">
+              Blog
+            </Link>
             <Link href="/about" className="text-gray-700 hover:text-blue-600 transition">
               About
             </Link>
@@ -136,6 +139,12 @@ export function Navbar() {
               className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
             >
               Events
+            </Link>
+            <Link
+              href="/blog"
+              className="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-lg"
+            >
+              Blog
             </Link>
             <Link
               href="/about"
