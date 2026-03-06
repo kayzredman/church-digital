@@ -1,8 +1,42 @@
 import Link from 'next/link';
 import { Card, Button } from '@/components';
 import { Heart, Calendar, Music, Users, Zap } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+
+interface Sermon {
+  id: string;
+  title: string;
+  speaker: string;
+  date: string;
+  duration: number;
+}
+
+interface Event {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+}
 
 export default function Home() {
+  const [latestSermons, setLatestSermons] = useState<Sermon[]>([]);
+  const [upcomingEvents, setUpcomingEvents] = useState<Event[]>([]);
+
+  useEffect(() => {
+    const loadData = async () => {
+      const [sermonsRes, eventsRes] = await Promise.all([
+        supabase.from('sermons').select('*').order('date', { ascending: false }).limit(3),
+        supabase.from('events').select('*').order('date', { ascending: true }).limit(2),
+      ]);
+      if (sermonsRes.data) setLatestSermons(sermonsRes.data);
+      if (eventsRes.data) setUpcomingEvents(eventsRes.data);
+    };
+    loadData();
+  }, []);
+
   return (
     <>
       {/* Hero Section */}
@@ -86,20 +120,26 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <Card key={i} hoverable>
-                <div className="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                  <Music size={48} className="text-gray-400" />
-                </div>
-                <h3 className="font-bold text-lg mb-2">Sermon Title {i}</h3>
-                <p className="text-gray-600 text-sm mb-1 font-semibold">👤 Pastor John Doe</p>
-                <p className="text-gray-500 text-xs mb-4">📅 March {5 + i}, 2024 • ⏱️ 45 minutes</p>
-                <Button variant="secondary" className="w-full font-semibold">
-                  <Music size={16} className="inline mr-2" />
-                  Play Sermon
-                </Button>
-              </Card>
-            ))}
+            {latestSermons.length > 0 ? (
+              latestSermons.map((sermon) => (
+                <Card key={sermon.id} hoverable>
+                  <div className="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
+                    <Music size={48} className="text-gray-400" />
+                  </div>
+                  <h3 className="font-bold text-lg mb-2">{sermon.title}</h3>
+                  <p className="text-gray-600 text-sm mb-1 font-semibold">👤 {sermon.speaker}</p>
+                  <p className="text-gray-500 text-xs mb-4">📅 {new Date(sermon.date).toLocaleDateString()} • ⏱️ {sermon.duration} min</p>
+                  <Button variant="secondary" className="w-full font-semibold">
+                    <Music size={16} className="inline mr-2" />
+                    Play Sermon
+                  </Button>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-3 text-center py-8">
+                <p className="text-gray-500">No sermons yet. Check back soon!</p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -114,27 +154,34 @@ export default function Home() {
             </Link>
           </div>
           <div className="grid md:grid-cols-2 gap-6">
-            {[1, 2].map((i) => (
-              <Card key={i} className="flex gap-6">
-                <div className="w-32 h-32 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex-shrink-0 flex items-center justify-center">
-                  <Calendar size={48} className="text-white opacity-30" />
-                </div>
-                <div className="flex-grow">
-                  <h3 className="font-bold text-lg mb-3">Event {i}</h3>
-                  <div className="flex items-center text-gray-700 font-semibold mb-2 text-sm">
-                    <Calendar size={16} className="mr-2 text-green-600" />
-                    March {10 + i}, 2024 - 3:00 PM
+            {upcomingEvents.length > 0 ? (
+              upcomingEvents.map((event) => (
+                <Card key={event.id} className="flex gap-6">
+                  <div className="w-32 h-32 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex-shrink-0 flex items-center justify-center">
+                    <Calendar size={48} className="text-white opacity-30" />
                   </div>
-                  <p className="text-gray-600 text-sm mb-4">
-                    Join us for an amazing event with the community and grow in faith together.
-                  </p>
-                  <Button size="sm" className="font-semibold">
-                    <Users size={16} className="inline mr-2" />
-                    Register for Event
-                  </Button>
-                </div>
-              </Card>
-            ))}
+                  <div className="flex-grow">
+                    <h3 className="font-bold text-lg mb-3">{event.title}</h3>
+                    <div className="flex items-center text-gray-700 font-semibold mb-2 text-sm">
+                      <Calendar size={16} className="mr-2 text-green-600" />
+                      {new Date(event.date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+                      {event.time && ` - ${event.time}`}
+                    </div>
+                    {event.description && (
+                      <p className="text-gray-600 text-sm mb-4 line-clamp-2">{event.description}</p>
+                    )}
+                    <Button size="sm" className="font-semibold">
+                      <Users size={16} className="inline mr-2" />
+                      Register for Event
+                    </Button>
+                  </div>
+                </Card>
+              ))
+            ) : (
+              <div className="col-span-2 text-center py-8">
+                <p className="text-gray-500">No upcoming events. Check back soon!</p>
+              </div>
+            )}
           </div>
         </div>
       </section>

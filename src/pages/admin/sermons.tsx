@@ -13,6 +13,7 @@ interface Sermon {
   date: string;
   duration: number;
   description: string;
+  category: string;
 }
 
 export default function SermonsManagement() {
@@ -29,6 +30,7 @@ export default function SermonsManagement() {
     date: '',
     duration: 0,
     description: '',
+    category: 'Sunday Service',
   });
 
   useEffect(() => {
@@ -60,6 +62,7 @@ export default function SermonsManagement() {
               date: '2024-03-05',
               duration: 45,
               description: 'A powerful message about faith and trust in God',
+              category: 'Sunday Service',
             },
             {
               id: '2',
@@ -68,6 +71,7 @@ export default function SermonsManagement() {
               date: '2024-03-12',
               duration: 52,
               description: 'Understanding the grace of God in our daily lives',
+              category: 'Sunday Service',
             },
           ];
           setSermons(defaultSermons);
@@ -84,7 +88,7 @@ export default function SermonsManagement() {
     loadSermons();
   }, [authLoading, isAuthenticated, userRole, router]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -106,6 +110,7 @@ export default function SermonsManagement() {
             date: formData.date,
             duration: formData.duration,
             description: formData.description,
+            category: formData.category,
           })
           .eq('id', editingId);
 
@@ -126,7 +131,7 @@ export default function SermonsManagement() {
         setSermons([...(data || []), ...sermons]);
       }
 
-      setFormData({ title: '', speaker: '', date: '', duration: 0, description: '' });
+      setFormData({ title: '', speaker: '', date: '', duration: 0, description: '', category: 'Sunday Service' });
       setShowForm(false);
     } catch (error) {
       console.error('Error saving sermon:', error);
@@ -213,7 +218,7 @@ export default function SermonsManagement() {
             onClick={() => {
               setShowForm(!showForm);
               setEditingId(null);
-              setFormData({ title: '', speaker: '', date: '', duration: 0, description: '' });
+              setFormData({ title: '', speaker: '', date: '', duration: 0, description: '', category: 'Sunday Service' });
             }}
             className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition flex items-center space-x-2"
           >
@@ -268,6 +273,20 @@ export default function SermonsManagement() {
               </div>
 
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                <select
+                  name="category"
+                  value={formData.category}
+                  onChange={handleInputChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-600 text-gray-700"
+                >
+                  <option value="Sunday Service">Sunday Service</option>
+                  <option value="Midweek">Midweek</option>
+                  <option value="Special">Special</option>
+                </select>
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
                 <textarea
                   name="description"
@@ -292,7 +311,7 @@ export default function SermonsManagement() {
                   onClick={() => {
                     setShowForm(false);
                     setEditingId(null);
-                    setFormData({ title: '', speaker: '', date: '', duration: 0, description: '' });
+                    setFormData({ title: '', speaker: '', date: '', duration: 0, description: '', category: 'Sunday Service' });
                   }}
                   className="bg-gray-300 text-gray-900 px-6 py-2 rounded-lg hover:bg-gray-400 transition"
                 >
@@ -317,7 +336,12 @@ export default function SermonsManagement() {
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">{sermon.title}</h3>
                     <p className="text-gray-600 text-sm mb-1">👤 {sermon.speaker}</p>
                     <p className="text-gray-600 text-sm mb-1">📅 {new Date(sermon.date).toLocaleDateString()}</p>
-                    <p className="text-gray-600 text-sm mb-2">⏱️ {sermon.duration} minutes</p>
+                    <p className="text-gray-600 text-sm mb-1">⏱️ {sermon.duration} minutes</p>
+                    {sermon.category && (
+                      <p className="text-gray-600 text-sm mb-2">
+                        <span className="inline-block px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">{sermon.category}</span>
+                      </p>
+                    )}
                     <p className="text-gray-700">{sermon.description}</p>
                   </div>
                   <div className="flex gap-2 ml-4">

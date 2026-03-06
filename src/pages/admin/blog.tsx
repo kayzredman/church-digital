@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/lib/supabase';
 import { Card, Button, Input } from '@/components';
 import { ArrowLeft, Plus, Trash2, Edit2, Search } from 'lucide-react';
 
@@ -42,13 +43,17 @@ export default function BlogManagement() {
       return;
     }
 
-    // Load blog posts from localStorage
-    const loadPosts = () => {
+    // Load blog posts from Supabase
+    const loadPosts = async () => {
       try {
-        const saved = localStorage.getItem('blogPosts');
-        if (saved) {
-          setPosts(JSON.parse(saved));
-        } else {
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Error loading blog posts:', error);
+          // Fallback to default posts if table doesn't exist
           const defaultPosts = [
             {
               id: '1',
@@ -70,7 +75,17 @@ export default function BlogManagement() {
             },
           ];
           setPosts(defaultPosts);
-          localStorage.setItem('blogPosts', JSON.stringify(defaultPosts));
+        } else {
+          // Map DB rows to BlogPost interface
+          setPosts((data || []).map((p: any) => ({
+            id: p.id,
+            title: p.title,
+            author: p.donor_name || 'Admin', // We store author as donor_name or use default
+            date: p.published_at || p.created_at?.split('T')[0] || '',
+            category: p.category || 'news',
+            content: p.content || '',
+            published: p.status === 'published',
+          })));
         }
       } catch (error) {
         console.error('Failed to load blog posts:', error);
@@ -90,25 +105,61 @@ export default function BlogManagement() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    let updatedPosts: BlogPost[];
-    if (editingId) {
-      updatedPosts = posts.map(p => p.id === editingId ? { ...formData, id: editingId } as BlogPost : p);
-      setEditingId(null);
-    } else {
-      const newPost: BlogPost = {
-        id: Date.now().toString(),
-        ...formData,
+    try {
+      const slug = formData.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const dbData = {
+        title: formData.title,
+        slug: editingId ? undefined : slug, // Only set slug on create
+        content: formData.content,
+        excerpt: formData.content.substring(0, 150),
+        category: formData.category,
+        status: formData.published ? 'published' : 'draft',
+        published_at: formData.published ? (formData.date || new Date().toISOString()) : null,
       };
-      updatedPosts = [newPost, ...posts];
-    }
 
-    setPosts(updatedPosts);
-    localStorage.setItem('blogPosts', JSON.stringify(updatedPosts));
-    setFormData({ title: '', author: '', date: '', category: 'news', content: '', published: false });
-    setShowForm(false);
+      if (editingId) {
+        // Update existing post
+        const { error } = await supabase
+          .from('blog_posts')
+          .update(dbData)
+          .eq('id', editingId);
+
+        if (error) throw error;
+
+        setPosts(posts.map(p => p.id === editingId ? { ...formData, id: editingId } as BlogPost : p));
+        setEditingId(null);
+      } else {
+        // Create new post
+        const { data, error } = await supabase
+          .from('blog_posts')
+          .insert([{ ...dbData, slug }])
+          .select();
+
+        if (error) throw error;
+
+        const newPost = data?.[0];
+        if (newPost) {
+          setPosts([{
+            id: newPost.id,
+            title: newPost.title,
+            author: formData.author || 'Admin',
+            date: newPost.published_at || newPost.created_at?.split('T')[0] || '',
+            category: newPost.category || 'news',
+            content: newPost.content || '',
+            published: newPost.status === 'published',
+          }, ...posts]);
+        }
+      }
+
+      setFormData({ title: '', author: '', date: '', category: 'news', content: '', published: false });
+      setShowForm(false);
+    } catch (error) {
+      console.error('Error saving blog post:', error);
+      alert('Failed to save blog post. Please try again.');
+    }
   };
 
   const handleEdit = (post: BlogPost) => {
@@ -117,11 +168,21 @@ export default function BlogManagement() {
     setShowForm(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this post?')) {
-      const updatedPosts = posts.filter(p => p.id !== id);
-      setPosts(updatedPosts);
-      localStorage.setItem('blogPosts', JSON.stringify(updatedPosts));
+      try {
+        const { error } = await supabase
+          .from('blog_posts')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+
+        setPosts(posts.filter(p => p.id !== id));
+      } catch (error) {
+        console.error('Error deleting blog post:', error);
+        alert('Failed to delete blog post');
+      }
     }
   };
 

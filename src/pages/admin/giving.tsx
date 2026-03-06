@@ -2,17 +2,18 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/lib/supabase';
 import { Card, Button } from '@/components';
 import { ArrowLeft, TrendingUp, Calendar, DollarSign } from 'lucide-react';
 
 interface Donation {
   id: string;
-  donor: string;
+  donor_name: string;
   amount: number;
-  method: 'stripe' | 'paystack' | 'bank_transfer';
-  date: string;
-  status: 'completed' | 'pending' | 'failed';
-  message?: string;
+  payment_method: 'stripe' | 'paystack' | 'bank_transfer';
+  created_at: string;
+  status: 'completed' | 'pending' | 'failed' | 'refunded';
+  note?: string;
 }
 
 export default function DonationsAnalytics() {
@@ -38,67 +39,39 @@ export default function DonationsAnalytics() {
       return;
     }
 
-    // Fetch donations from API
+    // Fetch donations from Supabase
     const fetchDonations = async () => {
       try {
-        // TODO: Replace with actual API call
-        const mockDonations: Donation[] = [
-          {
-            id: '1',
-            donor: 'John Doe',
-            amount: 5000,
-            method: 'stripe',
-            date: '2024-03-05',
-            status: 'completed',
-            message: 'God bless the ministry',
-          },
-          {
-            id: '2',
-            donor: 'Jane Smith',
-            amount: 2500,
-            method: 'paystack',
-            date: '2024-03-04',
-            status: 'completed',
-            message: 'Supporting youth ministry',
-          },
-          {
-            id: '3',
-            donor: 'Mike Johnson',
-            amount: 10000,
-            method: 'bank_transfer',
-            date: '2024-03-03',
-            status: 'completed',
-          },
-          {
-            id: '4',
-            donor: 'Sarah Williams',
-            amount: 3500,
-            method: 'stripe',
-            date: '2024-03-02',
-            status: 'completed',
-            message: 'Monthly commitment',
-          },
-          {
-            id: '5',
-            donor: 'Anonymous',
-            amount: 1500,
-            method: 'paystack',
-            date: '2024-03-01',
-            status: 'completed',
-          },
-        ];
+        const { data, error } = await supabase
+          .from('donations')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-        setDonations(mockDonations);
+        if (error) {
+          console.error('Error loading donations:', error);
+          setDonations([]);
+        } else {
+          setDonations(data || []);
+        }
+
+        const donationsList = data || [];
 
         // Calculate stats
-        const totalAmount = mockDonations.reduce((sum, d) => sum + (d.status === 'completed' ? d.amount : 0), 0);
-        const completedDonations = mockDonations.filter(d => d.status === 'completed');
+        const totalAmount = donationsList.reduce((sum: number, d: Donation) => sum + (d.status === 'completed' ? Number(d.amount) : 0), 0);
+        const completedDonations = donationsList.filter((d: Donation) => d.status === 'completed');
+
+        // Calculate this month's amount
+        const now = new Date();
+        const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+        const thisMonthAmount = donationsList
+          .filter((d: Donation) => d.status === 'completed' && d.created_at >= startOfMonth)
+          .reduce((sum: number, d: Donation) => sum + Number(d.amount), 0);
 
         setStats({
           totalDonations: completedDonations.length,
           totalAmount,
           averageDonation: completedDonations.length > 0 ? totalAmount / completedDonations.length : 0,
-          thisMonthAmount: totalAmount, // Simplified for now
+          thisMonthAmount,
         });
       } catch (error) {
         console.error('Failed to fetch donations:', error);
@@ -239,15 +212,15 @@ export default function DonationsAnalytics() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {donations.map(donation => (
                   <tr key={donation.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{donation.donor}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">₦{donation.amount.toLocaleString()}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{donation.donor_name || 'Anonymous'}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-green-600">₦{Number(donation.amount).toLocaleString()}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
-                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getMethodBadgeColor(donation.method)}`}>
-                        {donation.method.split('_').join(' ').toUpperCase()}
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${getMethodBadgeColor(donation.payment_method)}`}>
+                        {donation.payment_method.split('_').join(' ').toUpperCase()}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
-                      {new Date(donation.date).toLocaleDateString()}
+                      {new Date(donation.created_at).toLocaleDateString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm">
                       <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeColor(donation.status)}`}>
@@ -255,8 +228,8 @@ export default function DonationsAnalytics() {
                       </span>
                     </td>
                     <td className="px-6 py-4 text-sm text-gray-600">
-                      {donation.message ? (
-                        <p className="max-w-xs truncate italic">"{donation.message}"</p>
+                      {donation.note ? (
+                        <p className="max-w-xs truncate italic">"{donation.note}"</p>
                       ) : (
                         <span className="text-gray-400">-</span>
                       )}

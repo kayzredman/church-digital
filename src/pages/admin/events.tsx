@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/lib/supabase';
 import { Card, Button, Input } from '@/components';
 import { ArrowLeft, Plus, Trash2, Edit2, Search } from 'lucide-react';
 
@@ -44,13 +45,17 @@ export default function EventsManagement() {
       return;
     }
 
-    // Load events from localStorage
-    const loadEvents = () => {
+    // Load events from Supabase
+    const loadEvents = async () => {
       try {
-        const saved = localStorage.getItem('events');
-        if (saved) {
-          setEvents(JSON.parse(saved));
-        } else {
+        const { data, error } = await supabase
+          .from('events')
+          .select('*')
+          .order('date', { ascending: false });
+
+        if (error) {
+          console.error('Error loading events:', error);
+          // Fallback to default events if table doesn't exist
           const defaultEvents = [
             {
               id: '1',
@@ -59,7 +64,7 @@ export default function EventsManagement() {
               time: '09:00',
               location: 'Main Sanctuary',
               capacity: 500,
-              attendees: 320,
+              attendees: 0,
               description: 'Weekly Sunday morning service',
             },
             {
@@ -69,12 +74,17 @@ export default function EventsManagement() {
               time: '18:00',
               location: 'Fellowship Hall',
               capacity: 100,
-              attendees: 68,
+              attendees: 0,
               description: 'Monthly youth group gathering',
             },
           ];
           setEvents(defaultEvents);
-          localStorage.setItem('events', JSON.stringify(defaultEvents));
+        } else {
+          // Map DB rows to Event interface (attendees comes from event_attendees count)
+          setEvents((data || []).map((e: any) => ({
+            ...e,
+            attendees: 0, // Will be fetched separately if needed
+          })));
         }
       } catch (error) {
         console.error('Failed to load events:', error);
@@ -94,25 +104,56 @@ export default function EventsManagement() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    let updatedEvents: Event[];
-    if (editingId) {
-      updatedEvents = events.map(ev => ev.id === editingId ? { ...formData, id: editingId } as Event : ev);
-      setEditingId(null);
-    } else {
-      const newEvent: Event = {
-        id: Date.now().toString(),
-        ...formData,
-      };
-      updatedEvents = [newEvent, ...events];
-    }
+    try {
+      if (editingId) {
+        // Update existing event
+        const { error } = await supabase
+          .from('events')
+          .update({
+            title: formData.title,
+            date: formData.date,
+            time: formData.time,
+            location: formData.location,
+            capacity: formData.capacity,
+            description: formData.description,
+          })
+          .eq('id', editingId);
 
-    setEvents(updatedEvents);
-    localStorage.setItem('events', JSON.stringify(updatedEvents));
-    setFormData({ title: '', date: '', time: '', location: '', capacity: 0, attendees: 0, description: '' });
-    setShowForm(false);
+        if (error) throw error;
+
+        setEvents(events.map(ev => ev.id === editingId ? { ...formData, id: editingId } as Event : ev));
+        setEditingId(null);
+      } else {
+        // Create new event
+        const { data, error } = await supabase
+          .from('events')
+          .insert([{
+            title: formData.title,
+            date: formData.date,
+            time: formData.time,
+            location: formData.location,
+            capacity: formData.capacity,
+            description: formData.description,
+          }])
+          .select();
+
+        if (error) throw error;
+
+        const newEvent = data?.[0];
+        if (newEvent) {
+          setEvents([{ ...newEvent, attendees: 0 }, ...events]);
+        }
+      }
+
+      setFormData({ title: '', date: '', time: '', location: '', capacity: 0, attendees: 0, description: '' });
+      setShowForm(false);
+    } catch (error) {
+      console.error('Error saving event:', error);
+      alert('Failed to save event. Please try again.');
+    }
   };
 
   const handleEdit = (event: Event) => {
@@ -121,11 +162,21 @@ export default function EventsManagement() {
     setShowForm(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this event?')) {
-      const updatedEvents = events.filter(e => e.id !== id);
-      setEvents(updatedEvents);
-      localStorage.setItem('events', JSON.stringify(updatedEvents));
+      try {
+        const { error } = await supabase
+          .from('events')
+          .delete()
+          .eq('id', id);
+
+        if (error) throw error;
+
+        setEvents(events.filter(e => e.id !== id));
+      } catch (error) {
+        console.error('Error deleting event:', error);
+        alert('Failed to delete event');
+      }
     }
   };
 

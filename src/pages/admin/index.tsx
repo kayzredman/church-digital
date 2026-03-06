@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthContext';
+import { supabase } from '@/lib/supabase';
 import { Card, Button } from '@/components';
 import { BarChart, Users, Music, Calendar, DollarSign, Settings, LogOut } from 'lucide-react';
 
@@ -28,15 +29,25 @@ export default function AdminDashboard() {
       return;
     }
 
-    // Fetch dashboard stats
+    // Fetch dashboard stats from Supabase
     const fetchStats = async () => {
       try {
-        // TODO: Fetch from API
+        const [sermonsRes, eventsRes, donationsRes, usersRes] = await Promise.all([
+          supabase.from('sermons').select('id', { count: 'exact', head: true }),
+          supabase.from('events').select('id', { count: 'exact', head: true }),
+          supabase.from('donations').select('amount').eq('status', 'completed'),
+          supabase.from('users').select('id', { count: 'exact', head: true }),
+        ]);
+
+        const totalDonationAmount = (donationsRes.data || []).reduce(
+          (sum: number, d: any) => sum + Number(d.amount), 0
+        );
+
         setStats({
-          totalSermons: 12,
-          totalEvents: 8,
-          totalDonations: 15000,
-          totalUsers: 245,
+          totalSermons: sermonsRes.count || 0,
+          totalEvents: eventsRes.count || 0,
+          totalDonations: totalDonationAmount,
+          totalUsers: usersRes.count || 0,
         });
       } catch (error) {
         console.error('Failed to fetch stats:', error);
@@ -118,7 +129,7 @@ export default function AdminDashboard() {
           <Card className="text-center">
             <DollarSign size={32} className="mx-auto mb-3 text-purple-600" />
             <h3 className="text-lg font-semibold text-gray-600 mb-2">Total Donations</h3>
-            <p className="text-3xl font-bold text-gray-900">${(stats.totalDonations / 1000).toFixed(1)}k</p>
+            <p className="text-3xl font-bold text-gray-900">₦{(stats.totalDonations / 1000).toFixed(1)}k</p>
           </Card>
 
           <Card className="text-center">

@@ -1,21 +1,44 @@
 import Link from 'next/link';
 import { Card, Button } from '@/components';
 import { Calendar, MapPin, Users } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
+
+interface Event {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+  time: string;
+  location: string;
+  capacity: number;
+}
 
 export default function EventsPage() {
-  const events = Array(6)
-    .fill(null)
-    .map((_, i) => ({
-      id: i + 1,
-      title: `Event ${i + 1}`,
-      description: 'Join us for an amazing event with the community.',
-      date: new Date(2024, 2, 15 + i * 2),
-      location: 'Main Sanctuary',
-      capacity: 500,
-      registered: (i + 1) * 65, // Deterministic registered count based on index
-      image: '',
-    }));
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadEvents = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select('*')
+          .order('date', { ascending: true });
+
+        if (error) {
+          console.error('Error loading events:', error);
+        } else {
+          setEvents(data || []);
+        }
+      } catch (error) {
+        console.error('Failed to load events:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadEvents();
+  }, []);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -46,57 +69,56 @@ export default function EventsPage() {
 
         {/* Events List */}
         <div className="space-y-6">
-          {events.map((event) => (
-            <Card key={event.id} className="flex flex-col md:flex-row gap-6">
-              <div className="w-full md:w-48 h-48 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Calendar size={64} className="text-white opacity-30" />
-              </div>
-              <div className="flex-grow">
-                <h3 className="text-2xl font-bold mb-2 text-gray-600">{event.title}</h3>
-                <p className="text-gray-600 mb-4">{event.description}</p>
-
-                <div className="space-y-2 mb-6">
-                  <div className="flex items-center text-gray-700">
-                    <Calendar size={18} className="mr-3 text-green-600" />
-                    <span>
-                      {event.date.toLocaleDateString('en-US', {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      })}
-                      {' at '}
-                      {event.date.toLocaleTimeString('en-US', {
-                        hour: '2-digit',
-                        minute: '2-digit',
-                      })}
-                    </span>
-                  </div>
-                  <div className="flex items-center text-gray-700">
-                    <MapPin size={18} className="mr-3 text-green-600" />
-                    <span>{event.location}</span>
-                  </div>
-                  <div className="flex items-center text-gray-700">
-                    <Users size={18} className="mr-3 text-green-600" />
-                    <span>
-                      {event.registered} / {event.capacity} Registered
-                    </span>
-                  </div>
+          {loading ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500">Loading events...</p>
+            </div>
+          ) : events.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-500">No upcoming events</p>
+            </div>
+          ) : (
+            events.map((event) => (
+              <Card key={event.id} className="flex flex-col md:flex-row gap-6">
+                <div className="w-full md:w-48 h-48 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <Calendar size={64} className="text-white opacity-30" />
                 </div>
+                <div className="flex-grow">
+                  <h3 className="text-2xl font-bold mb-2 text-gray-600">{event.title}</h3>
+                  <p className="text-gray-600 mb-4">{event.description}</p>
 
-                <div className="w-full bg-gray-200 rounded-full h-2 mb-4">
-                  <div
-                    className="bg-green-600 h-2 rounded-full"
-                    style={{
-                      width: `${(event.registered / event.capacity) * 100}%`,
-                    }}
-                  ></div>
+                  <div className="space-y-2 mb-6">
+                    <div className="flex items-center text-gray-700">
+                      <Calendar size={18} className="mr-3 text-green-600" />
+                      <span>
+                        {new Date(event.date).toLocaleDateString('en-US', {
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}
+                        {event.time && ` at ${event.time}`}
+                      </span>
+                    </div>
+                    {event.location && (
+                      <div className="flex items-center text-gray-700">
+                        <MapPin size={18} className="mr-3 text-green-600" />
+                        <span>{event.location}</span>
+                      </div>
+                    )}
+                    {event.capacity && (
+                      <div className="flex items-center text-gray-700">
+                        <Users size={18} className="mr-3 text-green-600" />
+                        <span>Capacity: {event.capacity}</span>
+                      </div>
+                    )}
+                  </div>
+
+                  <Button>Register Now</Button>
                 </div>
-
-                <Button>Register Now</Button>
-              </div>
-            </Card>
-          ))}
+              </Card>
+            ))
+          )}
         </div>
       </div>
     </div>
