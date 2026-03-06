@@ -15,7 +15,7 @@ export default function AdminDashboard() {
     totalDonations: 0,
     totalUsers: 0,
   });
-  // Removed unused loading state
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     // Wait for auth to finish loading before checking permissions

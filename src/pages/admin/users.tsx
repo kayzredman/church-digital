@@ -178,7 +178,7 @@ export default function AdminUsers() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-8">
       {/* Dashboard Stats - Top Row */}
       <div className="flex flex-row gap-4 mb-8">
         <Card className="flex-1 text-center bg-linear-to-r from-gray-100 to-gray-300 border border-gray-200">
@@ -281,14 +281,15 @@ export default function AdminUsers() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact No.</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Donations</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">First Name</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Last Name</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">Contact No.</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-44">Email</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Role</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Status</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Total Donations</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Joined</th>
+                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -296,17 +297,19 @@ export default function AdminUsers() {
                 <tr key={user.id} className="hover:bg-gray-50">
                   {editingId === user.id ? (
                     <>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        <input type="text" value={editingFirstName} onChange={e => setEditingFirstName(e.target.value)} placeholder="First Name" className="px-2 py-1 border border-gray-300 rounded w-full mb-1" />
+                      <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        <input type="text" value={editingFirstName} onChange={e => setEditingFirstName(e.target.value)} placeholder="First Name" className="px-2 py-1 border border-gray-300 rounded w-full" />
+                      </td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                         <input type="text" value={editingLastName} onChange={e => setEditingLastName(e.target.value)} placeholder="Last Name" className="px-2 py-1 border border-gray-300 rounded w-full" />
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
                         <input type="text" value={editingContactNumber} onChange={e => setEditingContactNumber(e.target.value)} className="px-2 py-1 border border-gray-300 rounded w-full" />
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
                         <input type="email" value={editingEmail} onChange={e => setEditingEmail(e.target.value)} className="px-2 py-1 border border-gray-300 rounded w-full" />
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-3 py-4 whitespace-nowrap text-sm">
                         <select value={editingRole} onChange={e => setEditingRole(e.target.value as UserRole)} className="px-2 py-1 text-sm border border-gray-300 rounded">
                           <option value="admin">Admin</option>
                           <option value="editor">Editor</option>
@@ -315,15 +318,15 @@ export default function AdminUsers() {
                           <option value="visitor">Visitor</option>
                         </select>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-3 py-4 whitespace-nowrap text-sm">
                         <select value={user.status} onChange={e => handleStatusChange(user.id, e.target.value as UserStatus)} className={`px-3 py-1 rounded-full text-xs font-medium cursor-pointer ${user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
                           <option value="active">Active</option>
                           <option value="inactive">Inactive</option>
                         </select>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₦{user.totalDonations.toLocaleString()}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{new Date(user.joinDate).toLocaleDateString()}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">₦{user.totalDonations.toLocaleString()}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{new Date(user.joinDate).toLocaleDateString()}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm">
                         <div className="flex gap-2">
                           <button onClick={() => handleEditSave(user.id)} className="px-2 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">Save</button>
                           <button onClick={() => setEditingId(null)} className="px-2 py-1 text-xs bg-gray-300 text-gray-900 rounded hover:bg-gray-400">Cancel</button>
@@ -332,10 +335,11 @@ export default function AdminUsers() {
                     </>
                   ) : (
                     <>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.firstName} {user.lastName}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{user.contactNumber}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{user.email}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.firstName}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.lastName}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{user.contactNumber}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{user.email}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm">
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           user.role === 'admin' ? 'bg-purple-100 text-purple-800'
                           : user.role === 'editor' ? 'bg-green-100 text-green-800'
@@ -346,15 +350,15 @@ export default function AdminUsers() {
                           {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                         </span>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-3 py-4 whitespace-nowrap text-sm">
                         <select value={user.status} onChange={e => handleStatusChange(user.id, e.target.value as UserStatus)} className={`px-3 py-1 rounded-full text-xs font-medium cursor-pointer ${user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}>
                           <option value="active">Active</option>
                           <option value="inactive">Inactive</option>
                         </select>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">₦{user.totalDonations.toLocaleString()}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{new Date(user.joinDate).toLocaleDateString()}</td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm">
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">₦{user.totalDonations.toLocaleString()}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{new Date(user.joinDate).toLocaleDateString()}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm">
                         <div className="flex gap-2">
                           <button
                             onClick={() => handleEdit(user)}
