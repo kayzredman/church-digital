@@ -48,12 +48,12 @@ export default function AboutPage() {
       {/* Header */}
       <div className="relative text-white py-12 overflow-hidden">
         {/* Gradient Background with Transparency */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-400 via-purple-600 to-purple-900 opacity-90"></div>
+        <div className="absolute inset-0 opacity-90" style={{ background: 'linear-gradient(to bottom right, #C9A8E8, #B68BDB, #7B4FA2)' }}></div>
         
         {/* Content */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-4xl font-bold mb-4 text-gray-600">About Elimcity Throneroom</h1>
-          <p className="text-xl text-purple-100">
+          <h1 className="text-4xl font-bold mb-4">About Elimcity Throneroom</h1>
+          <p className="text-xl" style={{ color: '#E8D5F5' }}>
             Our story, vision, and commitment to serving our community
           </p>
         </div>
@@ -80,7 +80,7 @@ export default function AboutPage() {
                 community outreach programs, and various ministries designed to impact lives.
               </p>
             </div>
-            <div className="bg-gradient-to-br from-purple-400 to-purple-600 rounded-lg h-96"></div>
+            <div className="rounded-lg h-96" style={{ background: 'linear-gradient(to bottom right, #C9A8E8, #B68BDB)' }}></div>
           </div>
         </section>
 
@@ -92,7 +92,7 @@ export default function AboutPage() {
               const Icon = value.icon;
               return (
                 <Card key={idx} className="text-center hover:shadow-lg transition">
-                  <Icon size={48} className="text-purple-600 mx-auto mb-4" />
+                  <Icon size={48} className="mx-auto mb-4" style={{ color: '#B68BDB' }} />
                   <h3 className="font-bold text-lg mb-2 text-gray-600">{value.title}</h3>
                   <p className="text-gray-700 text-sm">{value.description}</p>
                 </Card>
@@ -107,9 +107,9 @@ export default function AboutPage() {
           <div className="grid md:grid-cols-3 gap-6">
             {team.map((member, idx) => (
               <Card key={idx} className="text-center">
-                <div className="w-32 h-32 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full mx-auto mb-4"></div>
+                <div className="w-32 h-32 rounded-full mx-auto mb-4" style={{ background: 'linear-gradient(to bottom right, #C9A8E8, #B68BDB)' }}></div>
                 <h3 className="font-bold text-lg text-gray-600">{member.name}</h3>
-                <p className="text-purple-600 font-medium mb-3">{member.role}</p>
+                <p className="font-medium mb-3" style={{ color: '#B68BDB' }}>{member.role}</p>
                 <p className="text-gray-700 text-sm">{member.bio}</p>
               </Card>
             ))}
@@ -138,7 +138,7 @@ export default function AboutPage() {
                 description: 'Building deep connections and discipleship in smaller communities',
               },
             ].map((ministry, idx) => (
-              <Card key={idx} className="border-l-4 border-purple-600">
+              <Card key={idx} className="border-l-4" style={{ borderLeftColor: '#B68BDB' }}>
                 <h3 className="font-bold text-lg mb-2 text-gray-600">{ministry.title}</h3>
                 <p className="text-gray-700">{ministry.description}</p>
               </Card>

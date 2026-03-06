@@ -34,12 +34,11 @@ export default function GivePage() {
       {/* Header */}
       <div className="relative text-white py-12 overflow-hidden">
         {/* Gradient Background with Transparency */}
-        <div className="absolute inset-0 bg-gradient-to-br from-red-400 via-red-600 to-red-900 opacity-90"></div>
-        
+        <div className="absolute inset-0" style={{ background: '#EDD550' }}></div>
         {/* Content */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-4">Support Our Ministry</h1>
-          <p className="text-xl text-red-100">
+          <p className="text-xl" style={{ color: '#FFFBEA' }}>
             Your generous giving helps us serve and impact our community
           </p>
         </div>
@@ -65,9 +64,10 @@ export default function GivePage() {
                       onClick={() => setAmount(quickAmount.toString())}
                       className={`py-2 px-3 rounded-lg font-medium transition ${
                         amount === quickAmount.toString()
-                          ? 'bg-red-600 text-white'
+                          ? ''
                           : 'bg-gray-200 text-gray-900 hover:bg-gray-300'
                       }`}
+                      style={amount === quickAmount.toString() ? { background: '#EDD550', color: '#7B6B1A' } : {}}
                     >
                       ${quickAmount}
                     </button>
@@ -92,11 +92,12 @@ export default function GivePage() {
                     onClick={() => setPaymentMethod('stripe')}
                     className={`p-4 border-2 rounded-lg transition ${
                       paymentMethod === 'stripe'
-                        ? 'border-red-600 bg-red-50'
+                        ? ''
                         : 'border-gray-300 hover:border-gray-400'
                     }`}
+                    style={paymentMethod === 'stripe' ? { borderColor: '#EDD550', background: '#FFFBEA' } : {}}
                   >
-                    <CreditCard size={24} className="mb-2" />
+                    <CreditCard size={24} className="mb-2" style={paymentMethod === 'stripe' ? { color: '#EDD550' } : {}} />
                     <p className="font-medium">Card</p>
                     <p className="text-sm text-gray-600">Visa / Mastercard</p>
                   </button>
@@ -104,11 +105,12 @@ export default function GivePage() {
                     onClick={() => setPaymentMethod('paystack')}
                     className={`p-4 border-2 rounded-lg transition ${
                       paymentMethod === 'paystack'
-                        ? 'border-red-600 bg-red-50'
+                        ? ''
                         : 'border-gray-300 hover:border-gray-400'
                     }`}
+                    style={paymentMethod === 'paystack' ? { borderColor: '#EDD550', background: '#FFFBEA' } : {}}
                   >
-                    <Smartphone size={24} className="mb-2" />
+                    <Smartphone size={24} className="mb-2" style={paymentMethod === 'paystack' ? { color: '#EDD550' } : {}} />
                     <p className="font-medium">Mobile Money</p>
                     <p className="text-sm text-gray-600">Momo / Airtel Money</p>
                   </button>
@@ -156,7 +158,8 @@ export default function GivePage() {
                   placeholder="Share what inspired your giving..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-600"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2"
+                  style={{ boxShadow: '0 0 0 2px #EDD55033' }}
                   rows={4}
                 />
               </div>
@@ -164,39 +167,40 @@ export default function GivePage() {
               {/* Submit */}
               <Button
                 className="w-full py-3 text-lg font-bold"
+                style={{ background: '#EDD550', color: '#7B6B1A' }}
                 onClick={handleDonate}
                 disabled={!amount}
               >
-                <Heart size={22} className="inline mr-3" />
-                {amount ? `Complete Donation of $${amount}` : 'Enter Amount to Donate'}
+                <Heart size={22} className="inline mr-3" style={{ color: '#7B6B1A' }} />
+                {amount ? `Complete Donation of $${amount}` : <span style={{ fontWeight: 900, letterSpacing: '0.5px' }}>Enter Amount to Donate</span>}
               </Button>
             </Card>
           </div>
 
           {/* Info Cards */}
           <div className="space-y-4">
-            <Card className="bg-blue-50 border-blue-200">
+            <Card className="" style={{ background: '#FFFBEA', borderColor: '#EDD550' }}>
               <h3 className="font-bold text-lg mb-2 text-gray-600">100% Transparent</h3>
               <p className="text-sm text-gray-700">
                 Your giving is handled securely and every donation goes directly to our ministry.
               </p>
             </Card>
 
-            <Card className="bg-green-50 border-green-200">
+            <Card className="" style={{ background: '#FFFBEA', borderColor: '#EDD550' }}>
               <h3 className="font-bold text-lg mb-2 text-gray-600">Tax Deductible</h3>
               <p className="text-sm text-gray-700">
                 We are a registered 501(c)(3) nonprofit. Keep your receipt for tax purposes.
               </p>
             </Card>
 
-            <Card className="bg-purple-50 border-purple-200">
+            <Card className="" style={{ background: '#FFFBEA', borderColor: '#EDD550' }}>
               <h3 className="font-bold text-lg mb-2 text-gray-600">Secure Payment</h3>
               <p className="text-sm text-gray-700">
                 Your payment information is encrypted and processed securely.
               </p>
             </Card>
 
-            <Card className="bg-yellow-50 border-yellow-200">
+            <Card className="" style={{ background: '#FFFBEA', borderColor: '#EDD550' }}>
               <h3 className="font-bold text-lg mb-2 text-gray-600">Recurring Giving</h3>
               <p className="text-sm text-gray-700">
                 Set up monthly giving to sustain our ministry consistently.

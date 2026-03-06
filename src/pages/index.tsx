@@ -42,7 +42,7 @@ export default function Home() {
       {/* Hero Section */}
       <section className="relative text-white py-32 overflow-hidden">
         {/* Gradient Background with Transparency */}
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-blue-600 to-blue-900 opacity-90"></div>
+        <div className="absolute inset-0 bg-linear-to-br from-blue-400 via-blue-600 to-blue-900 opacity-90"></div>
         
         {/* Content */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -123,13 +123,13 @@ export default function Home() {
             {latestSermons.length > 0 ? (
               latestSermons.map((sermon) => (
                 <Card key={sermon.id} hoverable>
-                  <div className="aspect-video bg-gray-200 rounded-lg mb-4 flex items-center justify-center">
-                    <Music size={48} className="text-gray-400" />
+                  <div className="aspect-video bg-linear-to-br from-blue-400 to-blue-600 rounded-lg mb-4 flex items-center justify-center">
+                    <Music size={48} className="text-white opacity-50" />
                   </div>
                   <h3 className="font-bold text-lg mb-2">{sermon.title}</h3>
                   <p className="text-gray-600 text-sm mb-1 font-semibold">👤 {sermon.speaker}</p>
                   <p className="text-gray-500 text-xs mb-4">📅 {new Date(sermon.date).toLocaleDateString()} • ⏱️ {sermon.duration} min</p>
-                  <Button variant="secondary" className="w-full font-semibold">
+                  <Button variant="primary" className="w-full font-semibold">
                     <Music size={16} className="inline mr-2" />
                     Play Sermon
                   </Button>
@@ -157,10 +157,10 @@ export default function Home() {
             {upcomingEvents.length > 0 ? (
               upcomingEvents.map((event) => (
                 <Card key={event.id} className="flex gap-6">
-                  <div className="w-32 h-32 bg-gradient-to-br from-green-400 to-green-600 rounded-lg flex-shrink-0 flex items-center justify-center">
+                  <div className="w-32 h-32 bg-linear-to-br from-green-400 to-green-600 rounded-lg shrink-0 flex items-center justify-center">
                     <Calendar size={48} className="text-white opacity-30" />
                   </div>
-                  <div className="flex-grow">
+                  <div className="grow">
                     <h3 className="font-bold text-lg mb-3">{event.title}</h3>
                     <div className="flex items-center text-gray-700 font-semibold mb-2 text-sm">
                       <Calendar size={16} className="mr-2 text-green-600" />

@@ -55,12 +55,11 @@ export default function ContactPage() {
       {/* Header */}
       <div className="relative text-white py-12 overflow-hidden">
         {/* Gradient Background with Transparency */}
-        <div className="absolute inset-0 bg-gradient-to-br from-orange-400 via-orange-600 to-orange-900 opacity-90"></div>
-        
+        <div className="absolute inset-0 opacity-90" style={{ background: 'linear-gradient(to bottom right, #7be87b, #49b93b, #26701c)' }}></div>
         {/* Content */}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h1 className="text-4xl font-bold mb-4">Contact Us</h1>
-          <p className="text-xl text-orange-100">
+          <p className="text-xl" style={{ color: '#eaffea' }}>
             We'd love to hear from you. Send us a message!
           </p>
         </div>
@@ -73,7 +72,7 @@ export default function ContactPage() {
           <div className="space-y-4">
             <Card>
               <div className="flex items-start space-x-4">
-                <MapPin size={24} className="text-orange-600 mt-1 flex-shrink-0" />
+                <MapPin size={24} className="mt-1 flex-shrink-0" style={{ color: '#49b93b' }} />
                 <div>
                   <h3 className="font-bold text-lg mb-1 text-gray-600">Address</h3>
                   <p className="text-gray-700 text-sm">
@@ -89,11 +88,11 @@ export default function ContactPage() {
 
             <Card>
               <div className="flex items-start space-x-4">
-                <Phone size={24} className="text-orange-600 mt-1 flex-shrink-0" />
+                <Phone size={24} className="mt-1 flex-shrink-0" style={{ color: '#49b93b' }} />
                 <div>
                   <h3 className="font-bold text-lg mb-1 text-gray-600">Phone</h3>
                   <p className="text-gray-700 text-sm">
-                    <a href="tel:+234xxx" className="hover:text-orange-600">
+                    <a href="tel:+234xxx" style={{ color: '#26701c' }} className="hover:underline">
                       +234 XXX XXX XXXX
                     </a>
                   </p>
@@ -103,13 +102,14 @@ export default function ContactPage() {
 
             <Card>
               <div className="flex items-start space-x-4">
-                <Mail size={24} className="text-orange-600 mt-1 flex-shrink-0" />
+                <Mail size={24} className="mt-1 flex-shrink-0" style={{ color: '#49b93b' }} />
                 <div>
                   <h3 className="font-bold text-lg mb-1 text-gray-600">Email</h3>
                   <p className="text-gray-700 text-sm">
                     <a
                       href="mailto:info@elimthronerm.com"
-                      className="hover:text-orange-600"
+                      style={{ color: '#26701c' }}
+                      className="hover:underline"
                     >
                       info@elimthronerm.com
                     </a>
@@ -120,7 +120,7 @@ export default function ContactPage() {
 
             <Card>
               <div className="flex items-start space-x-4">
-                <Clock size={24} className="text-orange-600 mt-1 flex-shrink-0" />
+                <Clock size={24} className="mt-1 flex-shrink-0" style={{ color: '#49b93b' }} />
                 <div>
                   <h3 className="font-bold text-lg mb-1 text-gray-600">Service Hours</h3>
                   <p className="text-gray-700 text-sm">
@@ -192,6 +192,7 @@ export default function ContactPage() {
                 <Button
                   type="submit"
                   className="w-full py-3 text-lg font-bold"
+                  style={{ background: '#49b93b', color: '#fff' }}
                   loading={loading}
                   disabled={loading}
                 >
