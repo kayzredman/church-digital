@@ -182,28 +182,28 @@ export default function AdminUsers() {
       {/* Dashboard Stats - Top Row */}
       <div className="flex flex-row gap-4 mb-8">
         <Card className="flex-1 text-center bg-linear-to-r from-gray-100 to-gray-300 border border-gray-200">
-          <h3 className="text-sm font-semibold text-gray-600 mb-2">Total Users</h3>
-          <p className="text-3xl font-bold text-gray-900">{users.length}</p>
+          <h3 className="text-base font-extrabold text-gray-800 mb-2">Total Users</h3>
+          <p className="text-4xl font-black text-gray-900">{users.length}</p>
         </Card>
         <Card className="flex-1 text-center bg-linear-to-r from-purple-100 to-purple-200 border border-purple-200">
-          <h3 className="text-sm font-semibold text-purple-600 mb-2">Admins</h3>
-          <p className="text-3xl font-bold text-purple-800">{users.filter(u => u.role === 'admin').length}</p>
+          <h3 className="text-base font-extrabold text-purple-800 mb-2">Admins</h3>
+          <p className="text-4xl font-black text-purple-900">{users.filter(u => u.role === 'admin').length}</p>
         </Card>
         <Card className="flex-1 text-center bg-linear-to-r from-green-100 to-green-200 border border-green-200">
-          <h3 className="text-sm font-semibold text-green-600 mb-2">Editors</h3>
-          <p className="text-3xl font-bold text-green-800">{users.filter(u => u.role === 'editor').length}</p>
+          <h3 className="text-base font-extrabold text-green-800 mb-2">Editors</h3>
+          <p className="text-4xl font-black text-green-900">{users.filter(u => u.role === 'editor').length}</p>
         </Card>
         <Card className="flex-1 text-center bg-linear-to-r from-yellow-100 to-yellow-200 border border-yellow-200">
-          <h3 className="text-sm font-semibold text-yellow-600 mb-2">Contributors</h3>
-          <p className="text-3xl font-bold text-yellow-800">{users.filter(u => u.role === 'contributor').length}</p>
+          <h3 className="text-base font-extrabold text-yellow-800 mb-2">Contributors</h3>
+          <p className="text-4xl font-black text-yellow-900">{users.filter(u => u.role === 'contributor').length}</p>
         </Card>
         <Card className="flex-1 text-center bg-linear-to-r from-blue-100 to-blue-200 border border-blue-200">
-          <h3 className="text-sm font-semibold text-blue-600 mb-2">Members</h3>
-          <p className="text-3xl font-bold text-blue-800">{users.filter(u => u.role === 'member').length}</p>
+          <h3 className="text-base font-extrabold text-blue-800 mb-2">Members</h3>
+          <p className="text-4xl font-black text-blue-900">{users.filter(u => u.role === 'member').length}</p>
         </Card>
         <Card className="flex-1 text-center bg-linear-to-r from-gray-200 to-gray-400 border border-gray-300">
-          <h3 className="text-sm font-semibold text-gray-600 mb-2">Visitors</h3>
-          <p className="text-3xl font-bold text-gray-900">{users.filter(u => u.role === 'visitor').length}</p>
+          <h3 className="text-base font-extrabold text-gray-800 mb-2">Visitors</h3>
+          <p className="text-4xl font-black text-gray-900">{users.filter(u => u.role === 'visitor').length}</p>
         </Card>
       </div>
 
@@ -281,15 +281,15 @@ export default function AdminUsers() {
           <table className="w-full">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">First Name</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-28">Last Name</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-32">Contact No.</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-44">Email</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Role</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Status</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Total Donations</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-24">Joined</th>
-                <th className="px-3 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-20">Actions</th>
+                <th className="px-3 py-3 text-left text-sm font-extrabold text-gray-800 uppercase tracking-wider w-28">First Name</th>
+                <th className="px-3 py-3 text-left text-sm font-extrabold text-gray-800 uppercase tracking-wider w-28">Last Name</th>
+                <th className="px-3 py-3 text-left text-sm font-extrabold text-gray-800 uppercase tracking-wider w-32">Contact No.</th>
+                <th className="px-3 py-3 text-left text-sm font-extrabold text-gray-800 uppercase tracking-wider w-44">Email</th>
+                <th className="px-3 py-3 text-left text-sm font-extrabold text-gray-800 uppercase tracking-wider w-20">Role</th>
+                <th className="px-3 py-3 text-left text-sm font-extrabold text-gray-800 uppercase tracking-wider w-20">Status</th>
+                <th className="px-3 py-3 text-left text-sm font-extrabold text-gray-800 uppercase tracking-wider w-24">Total Donations</th>
+                <th className="px-3 py-3 text-left text-sm font-extrabold text-gray-800 uppercase tracking-wider w-24">Joined</th>
+                <th className="px-3 py-3 text-left text-sm font-extrabold text-gray-800 uppercase tracking-wider w-20">Actions</th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
@@ -335,10 +335,10 @@ export default function AdminUsers() {
                     </>
                   ) : (
                     <>
-                      <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-600">{user.firstName}</td>
-                      <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-600">{user.lastName}</td>
-                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{user.contactNumber}</td>
-                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{user.email}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-base font-bold text-gray-900">{user.firstName}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-base font-bold text-gray-900">{user.lastName}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-base text-gray-800">{user.contactNumber}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-base text-blue-900">{user.email}</td>
                       <td className="px-3 py-4 whitespace-nowrap text-sm">
                         <span className={`px-3 py-1 rounded-full text-xs font-medium ${
                           user.role === 'admin' ? 'bg-purple-100 text-purple-800'
@@ -356,8 +356,8 @@ export default function AdminUsers() {
                           <option value="inactive">Inactive</option>
                         </select>
                       </td>
-                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">₦{user.totalDonations.toLocaleString()}</td>
-                      <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{new Date(user.joinDate).toLocaleDateString()}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-base text-green-900 font-semibold">₦{user.totalDonations.toLocaleString()}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-base text-gray-800">{new Date(user.joinDate).toLocaleDateString()}</td>
                       <td className="px-3 py-4 whitespace-nowrap text-sm">
                         <div className="flex gap-2">
                           <button
