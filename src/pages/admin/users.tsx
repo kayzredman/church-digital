@@ -240,19 +240,19 @@ export default function AdminUsers() {
         <form className="flex flex-col md:flex-row gap-4 items-end" onSubmit={handleAddUser}>
           <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-            <input type="text" value={addFirstName} onChange={e => setAddFirstName(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg" required />
+            <input type="text" value={addFirstName} onChange={e => setAddFirstName(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-600" required />
           </div>
           <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-            <input type="text" value={addLastName} onChange={e => setAddLastName(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg" required />
+            <input type="text" value={addLastName} onChange={e => setAddLastName(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-600" required />
           </div>
           <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 mb-1">Contact No.</label>
-            <input type="text" value={addContactNumber} onChange={e => setAddContactNumber(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg" />
+            <input type="text" value={addContactNumber} onChange={e => setAddContactNumber(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-600" />
           </div>
           <div className="flex-1">
             <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-            <input type="email" value={addEmail} onChange={e => setAddEmail(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg" required />
+            <input type="email" value={addEmail} onChange={e => setAddEmail(e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-gray-600" required />
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
@@ -298,16 +298,16 @@ export default function AdminUsers() {
                   {editingId === user.id ? (
                     <>
                       <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        <input type="text" value={editingFirstName} onChange={e => setEditingFirstName(e.target.value)} placeholder="First Name" className="px-2 py-1 border border-gray-300 rounded w-full" />
+                        <input type="text" value={editingFirstName} onChange={e => setEditingFirstName(e.target.value)} placeholder="First Name" className="px-2 py-1 border border-gray-300 rounded w-full text-gray-600" />
                       </td>
                       <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        <input type="text" value={editingLastName} onChange={e => setEditingLastName(e.target.value)} placeholder="Last Name" className="px-2 py-1 border border-gray-300 rounded w-full" />
+                        <input type="text" value={editingLastName} onChange={e => setEditingLastName(e.target.value)} placeholder="Last Name" className="px-2 py-1 border border-gray-300 rounded w-full text-gray-600" />
                       </td>
                       <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
-                        <input type="text" value={editingContactNumber} onChange={e => setEditingContactNumber(e.target.value)} className="px-2 py-1 border border-gray-300 rounded w-full" />
+                        <input type="text" value={editingContactNumber} onChange={e => setEditingContactNumber(e.target.value)} className="px-2 py-1 border border-gray-300 rounded w-full text-gray-600" />
                       </td>
                       <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">
-                        <input type="email" value={editingEmail} onChange={e => setEditingEmail(e.target.value)} className="px-2 py-1 border border-gray-300 rounded w-full" />
+                        <input type="email" value={editingEmail} onChange={e => setEditingEmail(e.target.value)} className="px-2 py-1 border border-gray-300 rounded w-full text-gray-600" />
                       </td>
                       <td className="px-3 py-4 whitespace-nowrap text-sm">
                         <select value={editingRole} onChange={e => setEditingRole(e.target.value as UserRole)} className="px-2 py-1 text-sm border border-gray-300 rounded">
@@ -335,8 +335,8 @@ export default function AdminUsers() {
                     </>
                   ) : (
                     <>
-                      <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.firstName}</td>
-                      <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{user.lastName}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-600">{user.firstName}</td>
+                      <td className="px-3 py-4 whitespace-nowrap text-sm font-medium text-gray-600">{user.lastName}</td>
                       <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{user.contactNumber}</td>
                       <td className="px-3 py-4 whitespace-nowrap text-sm text-gray-600">{user.email}</td>
                       <td className="px-3 py-4 whitespace-nowrap text-sm">

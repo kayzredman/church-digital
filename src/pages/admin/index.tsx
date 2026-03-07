@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/context/AuthContext';
 import { supabase } from '@/lib/supabase';
 import { Card, Button } from '@/components';
-import { BarChart, Users, Music, Calendar, DollarSign, Settings, LogOut } from 'lucide-react';
+import { BarChart, Users, Music, Calendar, DollarSign, Settings, LogOut, Podcast, Share2, Radio } from 'lucide-react';
 
 export default function AdminDashboard() {
   const { isAuthenticated, user, userRole, signOut, loading: authLoading } = useAuth();
@@ -224,6 +224,47 @@ export default function AdminDashboard() {
               </div>
             </Card>
           </Link>
+        <Link href="/admin/podcasts">
+          <Card className="cursor-pointer hover:shadow-lg transition h-full">
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-pink-100 rounded-lg">
+                <Podcast size={32} className="text-pink-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Podcast Management</h3>
+                <p className="text-gray-600 text-sm">Upload and manage podcasts</p>
+              </div>
+            </div>
+          </Card>
+        </Link>
+
+        <Link href="/admin/socials">
+          <Card className="cursor-pointer hover:shadow-lg transition h-full">
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-cyan-100 rounded-lg">
+                <Share2 size={32} className="text-cyan-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Socials Management</h3>
+                <p className="text-gray-600 text-sm">Manage social media links</p>
+              </div>
+            </div>
+          </Card>
+        </Link>
+
+        <Link href="/admin/livestreams">
+          <Card className="cursor-pointer hover:shadow-lg transition h-full">
+            <div className="flex items-center space-x-4">
+              <div className="p-3 bg-indigo-100 rounded-lg">
+                <Radio size={32} className="text-indigo-600" />
+              </div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900">Live Stream Management</h3>
+                <p className="text-gray-600 text-sm">Manage live stream links</p>
+              </div>
+            </div>
+          </Card>
+        </Link>
         </div>
       </div>
     </div>
